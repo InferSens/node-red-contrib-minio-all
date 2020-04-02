@@ -1,38 +1,39 @@
 {
-    "name": "node-red-node-minio",
-    "version": "0.0.1",
-    "description": "A collection of Node-RED nodes for MinIO.",
-    "dependencies"  : {
-      "minio": "^7.0.15"
-    },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/InferSens/node-red-node-minio"
-    },
-    "license": "Apache",
-    "keywords": [
-      "node-red",
-      "minio",
-      "s3"
-    ],
-    "node-red": {
-      "nodes": {
-        "bucket operations": "buckets.js",
-        "file object operations": "files.js",
-        "object operations": "objects.js",
-        "presigned operations": "presigned.js",
-        "bucket notification operations": "notifications.js",
-        "bucket policy operations": "policies.js"
-      }
-    },
-    "author": {
+  "name": "node-red-node-minio",
+  "version": "0.0.1",
+  "description": "A collection of Node-RED nodes for MinIO.",
+  "dependencies": {
+    "minio": ">=7.0.15"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/InferSens/node-red-node-minio"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "node-red",
+    "minio",
+    "s3"
+  ],
+  "node-red": {
+    "nodes": {
+      "minio-config": "minio-config.js",
+      "bucket operations": "buckets.js",
+      "file object operations": "files.js",
+      "object operations": "objects.js",
+      "presigned operations": "presigned.js",
+      "bucket notification operations": "notifications.js",
+      "bucket policy operations": "policies.js"
+    }
+  },
+  "author": {
+    "name": "Colin Payne",
+    "email": "colin.payne@infersens.com"
+  },
+  "maintainers": [
+    {
       "name": "Colin Payne",
       "email": "colin.payne@infersens.com"
-    },
-    "maintainers": [
-      {
-        "name": "Colin Payne",
-        "email": "colin.payne@infersens.com"
-      }
-    ]
-  }
+    }
+  ]
+}
