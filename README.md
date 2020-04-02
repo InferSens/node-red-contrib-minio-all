@@ -1,2 +1,2 @@
-# node-red-node-minio
+# node-red-contrib-minio-all
 NodeRed Node for common MinIO operations
