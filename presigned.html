@@ -1,4 +1,3 @@
-
 <!--
   Copyright 2020 Colin Payne.
 
@@ -29,10 +28,11 @@
             req_params: {value:""},
             resp_headers: {value:""},
             issue: {value:""},
-            policy: {value:""},
+            policy: {value:""}
         },
         inputs:1,
-        outputs:1,
+        outputs:2,
+        outputLabels: ["Output", "Error"],
         icon: "minio.png",
         label: function() {
             return this.name||"presigned";
