@@ -15,6 +15,7 @@
 -->
 
 <script type="text/javascript">
+
     RED.nodes.registerType('presigned',{
         category: 'MinIO',
         color: '#C52F4A',
@@ -35,16 +36,16 @@
         outputLabels: ["Output", "Error"],
         icon: "minio.png",
         label: function() {
-            return this.name||"presigned";
+            return this.name||"Presigned Operations";
         }
     });
 
 
     // ====  FUNCTION TO TOGGLE ELEMENT DISPLAY  ===============================================
 	function toggleVisibility(elementArray) {
-        var element;
+        let element;
         for (element of elementArray) {
-            var x = document.getElementById(element[0]);
+            let x = document.getElementById(element[0]);
             if (element[1]) {
                 x.style.display = "block";
             } else {
@@ -55,8 +56,8 @@
 
     // ====  FUNCTION TO DECIDE WHICH ELEMENTS TO DISPLAY  =====================================
     function inputVisibility() {
-        var selection = document.getElementById("node-input-operation").value;
-        var bitwise = 0;
+        let selection = document.getElementById("node-input-operation").value;
+        let bitwise = 0;
 
         switch (selection) {
             case "presignedURL":
@@ -75,9 +76,9 @@
                 bitwise = 0;
         }
 
-        var elementArray = [];
+        let elementArray = [];
 
-        var elementIds = [
+        let elementIds = [
             [ 1,  "bucketName" ],
             [ 2,  "objectName" ],
             [ 4,  "expiry" ],
@@ -86,20 +87,21 @@
             [ 32, "requestDate" ],
             [ 64, "policy" ]
         ]
-        var elementId;
+        // let elementId;
 
         for (elementId of elementIds) {
-            var isVisible = false;
+            let isVisible = false;
             
             if (bitwise & elementId[0]) {
                 isVisible = true;
             } 
-            elementArray.push([elementId[1], isVisible])
+            elementArray.push([elementId[1], isVisible]);
         }
-        toggleVisibility(elementArray)
+        toggleVisibility(elementArray);
+        
+        // const helpers = require('./helpers');
+        // helpers.toggleVisibility(elementArray);
     }
-
-    window.onload = inputVisibility;
 
 </script>
 
@@ -153,6 +155,13 @@
         <input type="text" id="node-input-policy" placeholder="Date when the URL will be issued (optional)">
     </div>
 </script>
+
+<script type="text/javascript">
+
+    window.onload = inputVisibility;
+
+</script>
+
 
 
 <script type="text/html" data-help-name="presigned">

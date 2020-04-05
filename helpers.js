@@ -36,6 +36,26 @@ exports.setStatus = function(node, minioStatus) {
     }
 };
 
+
+// ====  FUNCTION TO TOGGLE THE DISPLAY OF AN ARRAY OF ELEMENTS  ========================
+exports.toggleVisibility = function(elementArray) {
+    let element;
+    for (element of elementArray) {
+        let x = document.getElementById(element[0]);
+        if (element[1]) {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+}
+
+
+
+
+
+
+
 // exports.handleResult = function(node, err, date, xml, newMsg) {
 //     if (err) {
 //         console.error(err.message);

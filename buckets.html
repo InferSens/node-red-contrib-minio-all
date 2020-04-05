@@ -15,34 +15,35 @@
 -->
 
 <script type="text/javascript">
+
     RED.nodes.registerType('buckets',{
         category: 'MinIO',
         color: '#C52F4A',
         defaults: {
-            name: {value:""},
+            buckets_name: {value:""},
             host: {value:"", type:"minio-config", required:true},
-            operation: {value:""},
-            bucket: {value:""},
-            region: {value:""},
-            prefix: {value:""},
-            recursive: {value:""},
-            start_after: {value:""}
+            buckets_operation: {value:""},
+            buckets_bucket: {value:""},
+            buckets_region: {value:""},
+            buckets_prefix: {value:""},
+            buckets_recursive: {value:false},
+            buckets_start_after: {value:""}
         },
         inputs:1,
         outputs:2,
         outputLabels: ["Output", "Error"],
         icon: "minio.png",
         label: function() {
-            return this.name||"buckets";
+            return this.buckets_name||"Bucket Operations";
         }
     });
 
 
     // ====  FUNCTION TO TOGGLE ELEMENT DISPLAY  ===============================================
-	function toggleVisibility(elementArray) {
-        var element;
+	function toggleVisibility2(elementArray) {
+        let element;
         for (element of elementArray) {
-            var x = document.getElementById(element[0]);
+            let x = document.getElementById(element[0]);
             if (element[1]) {
                 x.style.display = "block";
             } else {
@@ -52,9 +53,9 @@
 	}
 
     // ====  FUNCTION TO DECIDE WHICH ELEMENTS TO DISPLAY  =====================================
-    function inputVisibility() {
-        var selection = document.getElementById("node-input-operation").value;
-        var bitwise = 0;
+    function inputVisibility2(elementId) {
+        let selection = document.getElementById(elementId).value;
+        let bitwise = 0;
 
         switch (selection) {
             case "makeBucket":
@@ -85,45 +86,44 @@
                 bitwise = 0;
         }
 
-        var elementArray = [];
+        let elementArray = [];
 
-        var elementIds = [
-            [ 1,  "bucketName" ],
-            [ 2,  "region" ],
-            [ 4,  "prefix" ],
-            [ 8,  "recursive" ],
-            [ 16, "startAfter" ]
+        let elementIds = [
+            [ 1,  "buckets_bucketName" ],
+            [ 2,  "buckets_region" ],
+            [ 4,  "buckets_prefix" ],
+            [ 8,  "buckets_recursive" ],
+            [ 16, "buckets_startAfter" ]
         ]
-        var elementId;
 
         for (elementId of elementIds) {
-            var isVisible = false;
+            let isVisible = false;
             
             if (bitwise & elementId[0]) {
                 isVisible = true;
             } 
             elementArray.push([elementId[1], isVisible])
         }
-        toggleVisibility(elementArray)
+        toggleVisibility2(elementArray)
     }
 
-    window.onload = inputVisibility;
+    window.onload = inputVisibility2;
 
 </script>
 
 
-<script type="text/x-red" data-template-name="buckets">
+<script type="text/html" data-template-name="buckets">
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="MinIO Bucket Operations">
+        <label for="node-input-buckets_name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-buckets_name" placeholder="MinIO Bucket Operations">
     </div>
     <div class="form-row">
         <label for="node-config-input-host"><i class="fa fa-server"></i> MinIO Host</label>
         <input type="text" id="node-input-host" />
     </div>
     <div class="form-row">
-        <label for="node-input-operation"><i class="fa fa-wrench"></i> Operation</label>
-        <select type="text" id="node-input-operation" onchange="inputVisibility()">
+        <label for="node-input-buckets_operation"><i class="fa fa-wrench"></i> Operation</label>
+        <select type="text" id="node-input-buckets_operation" onchange="inputVisibility2('node-input-buckets_operation')">
             <option value="default">--Select Bucket Operation--</option>
             <option value="makeBucket">makeBucket</option>
             <option value="listBuckets">listBuckets</option>
@@ -136,25 +136,39 @@
         ;
         </select>        
     </div>
-    <div class="form-row" id="bucketName" style="display: none">
-        <label for="node-input-bucket"><i class="fa fa-database"></i> Bucket</label>
-        <input type="text" id="node-input-bucket" placeholder="Bucket Name">
+    <div class="form-row" id="buckets_bucketName" style="display: none">
+        <label for="node-input-buckets_bucket"><i class="fa fa-database"></i> Bucket</label>
+        <input type="text" id="node-input-buckets_bucket" placeholder="Bucket Name">
     </div>
-    <div class="form-row" id="region" style="display: none">
-        <label for="node-input-region"><i class="fa fa-globe"></i> Region</label>
-        <input type="text" id="node-input-region" placeholder="Region">
+    <div class="form-row" id="buckets_region" style="display: none">
+        <label for="node-input-buckets_region"><i class="fa fa-globe"></i> Region</label>
+        <select type="text" id="node-input-buckets_region" placeholder="-- Select Region --">
+            <option value="None">None (default)</option>
+            <option value="us-east-1">us-east-1</option>
+            <option value="us-west-1">us-west-1</option>
+            <option value="us-west-2">us-west-2</option>
+            <option value="eu-west-1">eu-west-1</option>
+            <option value="eu-central-1">eu-central-1</option>
+            <option value="ap-southeast-1">ap-southeast-1</option>
+            <option value="ap-southeast-2">ap-southeast-2</option>
+            <option value="ap-northeast-1">ap-northeast-1</option>
+            <option value="ap-northeast-2">ap-northeast-2</option>
+            <option value="sa-east-1">sa-east-1</option>
+            <option value="cn-north-1">cn-north-1</option>
+        ;
+        </select>
     </div>
-    <div class="form-row" id="prefix" style="display: none">
-        <label for="node-input-prefix"><i class="fa fa-step-backward"></i> Prefix</label>
-        <input type="text" id="node-input-prefix" placeholder="Prefix of objects to be listed (optional)">
+    <div class="form-row" id="buckets_prefix" style="display: none">
+        <label for="node-input-buckets_prefix"><i class="fa fa-step-backward"></i> Prefix</label>
+        <input type="text" id="node-input-buckets_prefix" placeholder="Prefix of objects to be listed (optional)">
     </div>
-    <div class="form-row" id="recursive" style="display: none">
-        <label for="node-input-recursive"><i class="fa fa-repeat"></i> Recursive</label>
-        <input type="checkbox" id="node-input-recursive">
+    <div class="form-row" id="buckets_recursive" style="display: none">
+        <label for="node-input-buckets_recursive"><i class="fa fa-repeat"></i> Recursive</label>
+        <input type="checkbox" id="node-input-buckets_recursive" value="false">
     </div>
-    <div class="form-row" id="startAfter" style="display: none">
-        <label for="node-input-start_after"><i class="fa fa-calendar"></i> Start After</label>
-        <input type="text" id="node-input-start_after" placeholder="Date when the URL will be issued (optional)">
+    <div class="form-row" id="buckets_startAfter" style="display: none">
+        <label for="node-input-buckets_start_after"><i class="fa fa-calendar"></i> Start After</label>
+        <input type="text" id="node-input-buckets_start_after" placeholder="Date when the URL will be issued (optional)">
     </div>
 </script>
 

@@ -15,7 +15,7 @@
  **/
 
 module.exports = function(RED) {
-    const helpers  = require('./helpers');
+    const helpers = require('./helpers');
 
     function Presigned(config) {
         RED.nodes.createNode(this,config);
@@ -42,12 +42,9 @@ module.exports = function(RED) {
             'policy'     : node.policy
         }
 
-        console.log('node.operation:', node.operation);
 
         // retrive the values from the minio-config node
         node.minioInstance = RED.nodes.getNode(config.host);
-
-        console.log('node.minioInstance:', node.minioInstance);
 
         if (node.minioInstance) {
             node.listener = function(minioStatus) {
@@ -68,6 +65,7 @@ module.exports = function(RED) {
         // TRIGGER ON INCOMING MESSAGE
         node.on('input', function(msg) {
             // If values are provided in the incoming message, then they override those in the node configuration
+            node.operation = (msg.operation) ? msg.operation : node.operation;
             opParams.bucketName = (msg.bucketName) ? msg.bucketName : opParams.bucketName;
             opParams.objectName = (msg.objectName) ? msg.objectName : opParams.objectName;
             opParams.expiry = (msg.expiry) ? msg.expiry : opParams.expiry;
@@ -80,6 +78,7 @@ module.exports = function(RED) {
             switch (node.operation) {                
                 // ====  PRESIGNED URL  ===========================================
                 case "presignedURL":
+                    // minioClient.presignedUrl('GET', opParams.bucketName, opParams.objectName, opParams.expiry, opParams.reqParams, function(err, presignedUrl) {
                     minioClient.presignedUrl('GET', opParams.bucketName, opParams.objectName, opParams.expiry, function(err, presignedUrl) {
                         node.error = (err) ? err : null;
                         node.output = { 'presignedURL': presignedUrl };
@@ -101,8 +100,10 @@ module.exports = function(RED) {
                     break;
                 // ====  PRESIGNED POLICY OPERATION  ===========================================
                 case "presignedPostPolicy":
-                    node.error = 'Presigned Post Policy Not Yet Functioning'
-                    node.output = null;
+                    minioClient.presignedPostPolicy(opParams.bucketName, opParams.objectName, opParams.expiry, function(err, presignedUrl) {
+                        node.error = (err) ? err : null;
+                        node.output = { 'presignedPostPolicy': presignedUrl };
+                    })                    
                     break;
                 // ====  DEFAULT - INCORRECT SELECTION   ===========================================
                 case "default":

@@ -1,4 +1,3 @@
-
 <!--
   Copyright 2020 Colin Payne.
 
@@ -15,30 +14,121 @@
   limitations under the License.
 -->
 
-
 <script type="text/javascript">
+
     RED.nodes.registerType('files',{
         category: 'MinIO',
         color: '#C52F4A',
         defaults: {
-            name: {value:""}
+            files_name: {value:""},
+            host: {value:"", type:"minio-config", required:true},
+            files_operation: {value:""},
+            files_bucket: {value:""},
+            files_object: {value:""},
+            files_filepath: {value:""},
+            files_metadata: {value:""}
         },
         inputs:1,
-        outputs:1,
+        outputs:2,
+        outputLabels: ["Output", "Error"],
         icon: "minio.png",
         label: function() {
-            return this.name||"files";
+            return this.files_name||"File Object Operations";
         }
     });
+
+
+    // ====  FUNCTION TO TOGGLE ELEMENT DISPLAY  ===============================================
+	function toggleVisibilityFiles(elementArray) {
+        let element;
+        for (element of elementArray) {
+            let x = document.getElementById(element[0]);
+            if (element[1]) {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+	}
+
+    // ====  FUNCTION TO DECIDE WHICH ELEMENTS TO DISPLAY  =====================================
+    function inputVisibilityFiles(elementId) {
+        let selection = document.getElementById(elementId).value;
+        let bitwise = 0;
+
+        switch (selection) {
+            case "fGetObject":
+                bitwise = 7;
+                break;
+            case "fPutObject":
+                bitwise = 31;
+                break;
+            case "default":
+                bitwise = 0;
+        }
+
+        let elementArray = [];
+
+        let elementIds = [
+            [ 1,  "files_bucketName" ],
+            [ 2,  "files_objectName" ],
+            [ 4,  "files_filePath" ],
+            [ 8,  "files_metaData" ]
+        ]
+
+        for (elementId of elementIds) {
+            let isVisible = false;
+            
+            if (bitwise & elementId[0]) {
+                isVisible = true;
+            } 
+            elementArray.push([elementId[1], isVisible])
+        }
+        toggleVisibilityFiles(elementArray)
+    }
+
+    window.onload = inputVisibilityFiles;
+
 </script>
+
 
 <script type="text/html" data-template-name="files">
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-input-files_name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-files_name" placeholder="MinIO File Operations">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-server"></i> MinIO Host</label>
+        <input type="text" id="node-input-host" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-files_operation"><i class="fa fa-wrench"></i> Operation</label>
+        <select type="text" id="node-input-files_operation" onchange="inputVisibilityFiles('node-input-files_operation')">
+            <option value="default">--Select File Object Operation--</option>
+            <option value="fGetObject">fGetObject</option>
+            <option value="fPutObject">fPutObject</option>
+        ;
+        </select>        
+    </div>
+    <div class="form-row" id="files_bucketName" style="display: none">
+        <label for="node-input-files_bucket"><i class="fa fa-database"></i> Bucket</label>
+        <input type="text" id="node-input-files_bucket" placeholder="Bucket Name">
+    </div>
+    <div class="form-row" id="files_objectName" style="display: none">
+        <label for="node-input-files_object_name"><i class="fa fa-step-backward"></i> File</label>
+        <input type="text" id="node-input-files_object_name" placeholder="File Name">
+    </div>
+    <div class="form-row" id="files_filePath" style="display: none">
+        <label for="node-input-files_file_path"><i class="fa fa-repeat"></i> Path</label>
+        <input type="text" id="node-input-files_file_path" value="false">
+    </div>
+    <div class="form-row" id="files_metaData" style="display: none">
+        <label for="node-input-files_metadata"><i class="fa fa-calendar"></i> MetaData</label>
+        <input type="text" id="node-input-files_metadata" placeholder="Meta Data (optional)">
     </div>
 </script>
 
+
 <script type="text/html" data-help-name="files">
-    <p>MinIO File Object Operations</p>
+    <p>MinIO Bucket Operations</p>
 </script>
