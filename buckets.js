@@ -64,7 +64,6 @@ module.exports = function(RED) {
             opParams.bucketName = (msg.bucketName) ? msg.bucketName : opParams.bucketName;
             opParams.region = (msg.region) ? msg.region : opParams.region;
             opParams.prefix = (msg.prefix) ? msg.prefix : opParams.prefix;
-            // opParams.recursive = (msg.recursive) ? msg.recursive : opParams.recursive;
             opParams.recursive = (typeof msg.recursive === 'boolean') ? msg.recursive : opParams.recursive;
             opParams.startAfter = (msg.startAfter) ? msg.startAfter : opParams.startAfter;
             
@@ -73,7 +72,6 @@ module.exports = function(RED) {
                 // ====  MAKE BUCKET  ===========================================
                 case "makeBucket":
                     minioClient.makeBucket(opParams.bucketName, opParams.region, function(err) {
-                        // if (err) return console.log('Error creating bucket.', err)
                         if (err) {
                             node.output = { 'makeBucket': false };
                             node.error = err;
@@ -81,9 +79,6 @@ module.exports = function(RED) {
                             node.output = { 'makeBucket': true };
                             node.error = null;
                         }
-                        // console.log('Bucket created successfully in "us-east-1".')
-                        // node.error = (err) ? err : null;
-                        // node.output = { 'makeBucket': buckets };
                     })
                     break;
                 // ====  LIST BUCKETS  ===========================================
@@ -143,14 +138,6 @@ module.exports = function(RED) {
                 // ====  LIST INCOMPLETE UPLOADS  ===========================================
                 case "listIncompleteUploads":
                     var stream = minioClient.listIncompleteUploads(opParams.bucketName, opParams.prefix, opParams.recursive)
-                    // stream.on('data', function(obj) {
-                    //     console.log(obj)
-                    // })
-                    // Stream.on('end', function() {
-                    //     console.log('End')
-                    // })
-                    // Stream.on('error', function(err) {
-                    //     console.log(err)
                     var objects = [];
                     stream.on('data',  function(obj) { objects.push(obj) } );
                     stream.on('error', function(err) { node.error = err } );

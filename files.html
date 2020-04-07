@@ -61,7 +61,7 @@
                 bitwise = 7;
                 break;
             case "fPutObject":
-                bitwise = 31;
+                bitwise = 15;
                 break;
             case "default":
                 bitwise = 0;
@@ -115,20 +115,20 @@
         <input type="text" id="node-input-files_bucket" placeholder="Bucket Name">
     </div>
     <div class="form-row" id="files_objectName" style="display: none">
-        <label for="node-input-files_object_name"><i class="fa fa-step-backward"></i> File</label>
-        <input type="text" id="node-input-files_object_name" placeholder="File Name">
+        <label for="node-input-files_object"><i class="fa fa-file"></i> File</label>
+        <input type="text" id="node-input-files_object" placeholder="File Name">
     </div>
     <div class="form-row" id="files_filePath" style="display: none">
-        <label for="node-input-files_file_path"><i class="fa fa-repeat"></i> Path</label>
-        <input type="text" id="node-input-files_file_path" value="false">
+        <label for="node-input-files_filepath"><i class="fa fa-folder-open"></i> Path</label>
+        <input type="text" id="node-input-files_filepath" placeholder="File Path, eg /my-file.txt">
     </div>
     <div class="form-row" id="files_metaData" style="display: none">
-        <label for="node-input-files_metadata"><i class="fa fa-calendar"></i> MetaData</label>
+        <label for="node-input-files_metadata"><i class="fa fa-info"></i> MetaData</label>
         <input type="text" id="node-input-files_metadata" placeholder="Meta Data (optional)">
     </div>
 </script>
 
 
 <script type="text/html" data-help-name="files">
-    <p>MinIO Bucket Operations</p>
+    <p>MinIO File Object Operations</p>
 </script>

@@ -17,7 +17,7 @@
 
 
 <script type="text/javascript">
-    RED.nodes.registerType('files',{
+    RED.nodes.registerType('objects',{
         category: 'MinIO',
         color: '#C52F4A',
         defaults: {
@@ -27,18 +27,18 @@
         outputs:1,
         icon: "minio.png",
         label: function() {
-            return this.name||"files";
+            return this.name||"objects";
         }
     });
 </script>
 
-<script type="text/html" data-template-name="files">
+<script type="text/html" data-template-name="objects">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/html" data-help-name="files">
-    <p>MinIO File Object Operations</p>
+<script type="text/html" data-help-name="objects">
+    <p>MinIO Object Operations</p>
 </script>

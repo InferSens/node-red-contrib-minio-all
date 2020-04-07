@@ -20,22 +20,20 @@ module.exports = function(RED) {
     function files(config) {
         RED.nodes.createNode(this,config);
 
-        this.name        = config.files_name;
-        this.operation   = config.files_operation;
-        this.bucket      = config.files_bucket;
-        this.region      = config.files_region;
-        this.prefix      = config.files_prefix;
-        this.recursive   = config.files_recursive;
-        this.start_after = config.files_start_after;
+        this.name      = config.files_name;
+        this.operation = config.files_operation;
+        this.bucket    = config.files_bucket;
+        this.object    = config.files_object;
+        this.file_path = config.files_filepath;
+        this.meta_data = config.files_metadata;
 
         var node = this;
 
         var opParams = {
             'bucketName' : node.bucket,
-            'region'     : node.region,
-            'prefix'     : node.prefix,
-            'recursive'  : node.recursive,
-            'startAfter' : node.start_after
+            'objectName' : node.object,
+            'filePath'   : node.file_path,
+            'metaData'   : node.meta_data
         }
 
         // retrive the values from the minio-config node
@@ -59,109 +57,57 @@ module.exports = function(RED) {
 
         // TRIGGER ON INCOMING MESSAGE
         node.on('input', function(msg) {
-            // If values are provided in the incoming message, then they override those in the node configuration
+            // If values are provided in the incoming message, then they override those set in the node configuration
             node.operation = (msg.operation) ? msg.operation : node.operation;
             opParams.bucketName = (msg.bucketName) ? msg.bucketName : opParams.bucketName;
-            opParams.region = (msg.region) ? msg.region : opParams.region;
-            opParams.prefix = (msg.prefix) ? msg.prefix : opParams.prefix;
-            // opParams.recursive = (msg.recursive) ? msg.recursive : opParams.recursive;
-            opParams.recursive = (typeof msg.recursive === 'boolean') ? msg.recursive : opParams.recursive;
-            opParams.startAfter = (msg.startAfter) ? msg.startAfter : opParams.startAfter;
+            opParams.objectName = (msg.objectName) ? msg.objectName : opParams.objectName;
+            opParams.filePath = (msg.filePath) ? msg.filePath : opParams.filePath;
+            opParams.metaData = (msg.metaData) ? msg.metaData : opParams.metaData;
             
             // Trigger Bucket Operation type based on "operation" selected in node configuration
             switch (node.operation) {                
-                // ====  MAKE BUCKET  ===========================================
-                case "makeBucket":
-                    minioClient.makeBucket(opParams.bucketName, opParams.region, function(err) {
-                        // if (err) return console.log('Error creating bucket.', err)
+                
+                // ====  FILE GET OBJECT  ===========================================
+                case "fGetObject":
+                    minioClient.fGetObject(opParams.bucketName, opParams.objectName, opParams.filePath, function(err) {
                         if (err) {
-                            node.output = { 'makeBucket': false };
+                            node.output = { 'fGetObject': false };
                             node.error = err;
                         } else {
-                            node.output = { 'makeBucket': true };
+                            node.output = { 'fGetObject': true };
                             node.error = null;
                         }
-                        // console.log('Bucket created successfully in "us-east-1".')
-                        // node.error = (err) ? err : null;
-                        // node.output = { 'makeBucket': files };
                     })
                     break;
-                // ====  LIST files  ===========================================
-                case "listfiles":
-                    minioClient.listfiles(function(err, files) {
-                        node.error = (err) ? err : null;
-                        node.output = { 'listfiles': files };
-                    })
+
+                // ====  FILE PUT OBJECT  ===========================================
+                case "fPutObject":
+                    if (opParams.metaData) {
+                        minioClient.fPutObject(opParams.bucketName, opParams.objectName, opParams.filePath, opParams.metaData, function(err, etag) {
+                            if (err) {
+                                node.output = { 'fPutObject': false };
+                                node.error = err;
+                            } else {
+                                node.output = { 'fPutObject': true, 'etag': etag };
+                                node.error = null;
+                            }
+                        })
+                    } else {
+                        minioClient.fPutObject(opParams.bucketName, opParams.objectName, opParams.filePath, function(err, etag) {
+                            if (err) {
+                                node.output = { 'fPutObject': false };
+                                node.error = err;
+                            } else {
+                                node.output = { 'fPutObject': true, 'etag': etag };
+                                node.error = null;
+                            }
+                        })
+                    }
                     break;
-                // ====  BUCKET EXISTS  ===========================================
-                case "bucketExists":
-                    minioClient.bucketExists(opParams.bucketName, function(err, exists) {
-                        node.error = (err) ? err : null;
-                        node.output = (exists) ? { 'bucketExists': true } : { 'bucketExists': false };
-                    })                    
-                    break;
-                // ====  REMOVE BUCKET  ===========================================
-                case "removeBucket":
-                    minioClient.removeBucket(opParams.bucketName, function(err) {
-                        node.error = (err) ? err : null;
-                        node.output = (err) ? { 'removeBucket': false } : { 'removeBucket': true };
-                    })
-                    break;
-                // ====  LIST OBJECTS  ===========================================
-                case "listObjects":
-                    var stream = minioClient.listObjects(opParams.bucketName,opParams.prefix, opParams.recursive)
-                    var objects = [];
-                    stream.on('data',  function(obj) { objects.push(obj) } );
-                    stream.on('error', function(err) { node.error = err } );
-                    stream.on('end',   function() { 
-                        node.output = { 'listObjects': objects };
-                        node.error = null;
-                    })
-                    break;
-                // ====  LIST OBJECTS V2  ===========================================
-                case "listObjectsV2":
-                    var stream = minioClient.listObjectsV2(opParams.bucketName,opParams.prefix, opParams.recursive,opParams.startAfter)
-                    var objects = [];
-                    stream.on('data',  function(obj) { objects.push(obj) } );
-                    stream.on('error', function(err) { node.error = err } );
-                    stream.on('end',   function() { 
-                        node.output = { 'listObjectsV2': objects };
-                        node.error = null;
-                    })
-                    break;
-                // ====  LIST OBJECTS V2 WITH META DATA  ===========================================
-                case "listObjectsV2WithMetadata":
-                    var stream = minioClient.extensions.listObjectsV2WithMetadata(opParams.bucketName,opParams.prefix, opParams.recursive,opParams.startAfter)
-                    var objects = [];
-                    stream.on('data',  function(obj) { objects.push(obj) } );
-                    stream.on('error', function(err) { node.error = err } );
-                    stream.on('end',   function() {
-                        node.output = { 'listObjectsV2WithMetadata': objects },
-                        node.error = null;
-                    })
-                    break;
-                // ====  LIST INCOMPLETE UPLOADS  ===========================================
-                case "listIncompleteUploads":
-                    var stream = minioClient.listIncompleteUploads(opParams.bucketName, opParams.prefix, opParams.recursive)
-                    // stream.on('data', function(obj) {
-                    //     console.log(obj)
-                    // })
-                    // Stream.on('end', function() {
-                    //     console.log('End')
-                    // })
-                    // Stream.on('error', function(err) {
-                    //     console.log(err)
-                    var objects = [];
-                    stream.on('data',  function(obj) { objects.push(obj) } );
-                    stream.on('error', function(err) { node.error = err } );
-                    stream.on('end',   function() {
-                        node.output = { 'listIncompleteUploads': objects },
-                        node.error = null;
-                    })
-                    break;
+
                 // ====  DEFAULT - INCORRECT SELECTION   ===========================================
                 case "default":
-                    node.error = 'Invalid Bucket Operation Selection'
+                    node.error = 'Invalid File Object Operation Selection'
                     node.output = null;
             }
 

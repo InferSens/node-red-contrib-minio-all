@@ -1,5 +1,5 @@
 module.exports = function(RED) {
-    function Files(config) {
+    function Objects(config) {
         RED.nodes.createNode(this,config);
         var node = this;
         node.on('input', function(msg) {
@@ -7,5 +7,5 @@ module.exports = function(RED) {
             node.send(msg);
         });
     }
-    RED.nodes.registerType("files",Files);
+    RED.nodes.registerType("objects",Objects);
 }
