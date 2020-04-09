@@ -130,6 +130,87 @@
 </script>
 
 
+
+
+
+<!-- ====  NODE HELP INFORMATION  ==================================================================================== -->
+
 <script type="text/html" data-help-name="files">
-    <p>MinIO File Object Operations</p>
+
+    <h1>MinIO File Object Operations</h1>
+    <p>For each operation, paramenters can either be set in the Edit Node dialogue, 
+    or passed in to the node via the node input. Parameters passed in will override any parameters 
+    set in the Edit Node dialogue.</p>
+    <p>The bucket <b><i>Operation</i></b> can be passed in to the node by setting the appropriate incoming value of <code>msg.operation</code></p>
+    
+    <h2>1. <i>fGetObject</i></h2>
+    
+    <h3>Description</h3>
+    <p>Downloads and saves the object as a file in the local filesystem.</p>
+    
+    <h3>Parameters</h3>
+    
+    <table>
+        <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
+
+        <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-file">&#x202F;</i></td><td valign="top"><b>File</b></td><td><b><code>objectName</code></b> ( <code>msg.objectName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the object.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-folder-open">&#x202F;</i></td><td valign="top"><b>Path</b></td><td><b><code>filePath</code></b> ( <code>msg.filePath</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Path on the local filesystem to which the object data will be written.</td></tr>
+
+    </table>
+    
+    <h3>Node Outputs</h3>
+    <table>
+        <tr>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the object could be downloaded as a file, e.g. <code>{"fGetObject":true}</code></td>
+        </tr>
+        <tr>
+            <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will be passed to the node's 'Error' output.</td>
+        </tr>
+    </table>
+    
+    <hr>
+
+
+    <h2>2. <i>fPutObject</i></h2>
+    
+    <h3>Description</h3>
+    <p>Uploads contents from a file to objectName.</p>
+    <p>The maximum size of a single object is limited to 5TB. fPutObject transparently uploads objects larger than 64MiB in multiple parts. Uploaded data is carefully verified using MD5SUM signatures.</p>
+    
+    <h3>Parameters</h3>
+    
+    <table>
+        <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
+
+        <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-file">&#x202F;</i></td><td valign="top"><b>File</b></td><td><b><code>objectName</code></b> ( <code>msg.objectName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the object.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-folder-open">&#x202F;</i></td><td valign="top"><b>Path</b></td><td><b><code>filePath</code></b> ( <code>msg.filePath</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Path of the file to be uploaded.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-info">&#x202F;</i></td><td valign="top"><b>MetaData</b></td><td><b><code>metaData</code></b> ( <code>msg.metaData</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Metadata of the object (optional).</td></tr>
+
+    </table>
+    
+    <h3>Node Outputs</h3>
+    <table>
+        <tr>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output a JS object, containing confirmation as to whether or not the file object was successfully uploaded, and, if successful, an etag value for the uploaded file object, e.g. <code>{"fPutObject":true,"etag":"etagvaluestring"}</code></td>
+        </tr>
+        <tr>
+            <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will be passed to the node's 'Error' output.</td>
+        </tr>
+    </table>
+
+
 </script>
