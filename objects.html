@@ -18,28 +18,35 @@
 
     RED.nodes.registerType('objects',{
         category: 'MinIO',
-        color: '#C52F4A',
+        // color: '#C52F4A',
+        color: '#E24360',
         defaults: {
             objects_name: {value:""},
             host: {value:"", type:"minio-config", required:true},
             objects_operation: {value:""},
             objects_bucket: {value:""},
             objects_object: {value:""},
-            objects_filepath: {value:""},
-            objects_metadata: {value:""}
-        },
+            objects_offset: {value:""},
+            objects_length: {value:""},
+            objects_stream: {value:""},
+            objects_size: {value:""},
+            objects_metadata: {value:""},
+            objects_sourceobject: {value:""},
+            objects_conditions: {value:""},
+            objects_objectslist: {value:""}
+       },
         inputs:1,
         outputs:2,
         outputLabels: ["Output", "Error"],
         icon: "minio.png",
         label: function() {
-            return this.objects_name||"File Object Operations";
+            return this.objects_name||"Object Operations";
         }
     });
 
 
     // ====  FUNCTION TO TOGGLE ELEMENT DISPLAY  ===============================================
-	function toggleVisibilityobjects(elementArray) {
+	function toggleVisibilityObjects(elementArray) {
         let element;
         for (element of elementArray) {
             let x = document.getElementById(element[0]);
@@ -52,16 +59,34 @@
 	}
 
     // ====  FUNCTION TO DECIDE WHICH ELEMENTS TO DISPLAY  =====================================
-    function inputVisibilityobjects(elementId) {
+    function inputVisibilityObjects(elementId) {
         let selection = document.getElementById(elementId).value;
         let bitwise = 0;
 
         switch (selection) {
-            case "fGetObject":
-                bitwise = 7;
+            case "getObject":
+                bitwise = 3;
                 break;
-            case "fPutObject":
+            case "getPartialObject":
                 bitwise = 15;
+                break;
+            case "putObject":
+                bitwise = 115;
+                break;
+            case "copyObject":
+                bitwise = 387;
+                break;
+            case "statObject":
+                bitwise = 3;
+                break;
+            case "removeObject":
+                bitwise = 3;
+                break;
+            case "removeObjects":
+                bitwise = 515;
+                break;
+            case "removeIncompleteUpload":
+                bitwise = 3;
                 break;
             case "default":
                 bitwise = 0;
@@ -70,10 +95,16 @@
         let elementArray = [];
 
         let elementIds = [
-            [ 1,  "objects_bucketName" ],
-            [ 2,  "objects_objectName" ],
-            [ 4,  "objects_filePath" ],
-            [ 8,  "objects_metaData" ]
+            [ 1,   "objects_bucketName" ],
+            [ 2,   "objects_objectName" ],
+            [ 4,   "objects_offset" ],
+            [ 8,   "objects_length" ],
+            [ 16,  "objects_stream" ],
+            [ 32,  "objects_size" ],
+            [ 64,  "objects_metaData" ],
+            [ 128, "objects_sourceObject" ],
+            [ 256, "objects_conditions" ],
+            [ 512, "objects_objectsList" ]
         ]
 
         for (elementId of elementIds) {
@@ -84,10 +115,10 @@
             } 
             elementArray.push([elementId[1], isVisible])
         }
-        toggleVisibilityobjects(elementArray)
+        toggleVisibilityObjects(elementArray)
     }
 
-    window.onload = inputVisibilityobjects;
+    window.onload = inputVisibilityObjects;
 
 </script>
 
@@ -103,10 +134,16 @@
     </div>
     <div class="form-row">
         <label for="node-input-objects_operation"><i class="fa fa-wrench"></i> Operation</label>
-        <select type="text" id="node-input-objects_operation" onchange="inputVisibilityobjects('node-input-objects_operation')">
+        <select type="text" id="node-input-objects_operation" onchange="inputVisibilityObjects('node-input-objects_operation')">
             <option value="default">--Select File Object Operation--</option>
-            <option value="fGetObject">fGetObject</option>
-            <option value="fPutObject">fPutObject</option>
+            <option value="getObject">getObject</option>
+            <option value="getPartialObject">getPartialObject</option>
+            <option value="putObject">putObject</option>
+            <option value="copyObject">copyObject</option>
+            <option value="statObject">statObject</option>
+            <option value="removeObject">removeObject</option>
+            <option value="removeObjects">removeObjects</option>
+            <option value="removeIncompleteUpload">removeIncompleteUpload</option>
         ;
         </select>        
     </div>
@@ -115,20 +152,44 @@
         <input type="text" id="node-input-objects_bucket" placeholder="Bucket Name">
     </div>
     <div class="form-row" id="objects_objectName" style="display: none">
-        <label for="node-input-objects_object"><i class="fa fa-file"></i> File</label>
-        <input type="text" id="node-input-objects_object" placeholder="File Name">
+        <label for="node-input-objects_object"><i class="fa fa-file"></i> Object</label>
+        <input type="text" id="node-input-objects_object" placeholder="Object Name">
     </div>
-    <div class="form-row" id="objects_filePath" style="display: none">
-        <label for="node-input-objects_filepath"><i class="fa fa-folder-open"></i> Path</label>
-        <input type="text" id="node-input-objects_filepath" placeholder="File Path, eg /my-file.txt">
+    <div class="form-row" id="objects_offset" style="display: none">
+        <label for="node-input-objects_offset"><i class="fa fa-wrench"></i> Offset</label>
+        <input type="text" id="node-input-objects_offset" placeholder="Offset">
+    </div>
+    <div class="form-row" id="objects_length" style="display: none">
+        <label for="node-input-objects_length"><i class="fa fa-arrows-h"></i> Length</label>
+        <input type="text" id="node-input-objects_length" placeholder="Length">
+    </div>
+    <div class="form-row" id="objects_stream" style="display: none">
+        <label for="node-input-objects_stream"><i class="fa fa-wrench"></i> Stream</label>
+        <input type="text" id="node-input-objects_stream" placeholder="Stream">
+    </div>
+    <div class="form-row" id="objects_size" style="display: none">
+        <label for="node-input-objects_size"><i class="fa fa-expand"></i> Size</label>
+        <input type="text" id="node-input-objects_size" placeholder="Size">
     </div>
     <div class="form-row" id="objects_metaData" style="display: none">
         <label for="node-input-objects_metadata"><i class="fa fa-info"></i> MetaData</label>
-        <input type="text" id="node-input-objects_metadata" placeholder="Meta Data (optional)">
+        <input type="text" id="node-input-objects_metadata" placeholder="Meta Data">
+    </div>
+    <div class="form-row" id="objects_sourceObject" style="display: none">
+        <label for="node-input-objects_sourceobject"><i class="fa fa-files-o"></i> Source Obj.</label>
+        <input type="text" id="node-input-objects_sourceobject" placeholder="Source Object">
+    </div>
+    <div class="form-row" id="objects_conditions" style="display: none">
+        <label for="node-input-objects_conditions"><i class="fa fa-book"></i> Conditions</label>
+        <input type="text" id="node-input-objects_conditions" placeholder="Conditions">
+    </div>
+    <div class="form-row" id="objects_objectsList" style="display: none">
+        <label for="node-input-objects_objectslist"><i class="fa fa-list"></i> Objects List</label>
+        <input type="text" id="node-input-objects_objectslist" placeholder="Objects List">
     </div>
 </script>
 
 
 <script type="text/html" data-help-name="objects">
-    <p>MinIO File Object Operations</p>
+    <p>MinIO Object Operations</p>
 </script>

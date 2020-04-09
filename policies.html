@@ -1,4 +1,3 @@
-
 <!--
   Copyright 2020 Colin Payne.
 
@@ -15,29 +14,109 @@
   limitations under the License.
 -->
 
-
 <script type="text/javascript">
+
     RED.nodes.registerType('policies',{
         category: 'MinIO',
-        color: '#C52F4A',
+        // color: '#C52F4A',
+        color: '#E24360',
         defaults: {
-            name: {value:""}
-        },
+            policies_name: {value:""},
+            host: {value:"", type:"minio-config", required:true},
+            policies_operation: {value:""},
+            policies_bucket: {value:""},
+            policies_policy: {value:""}
+       },
         inputs:1,
-        outputs:1,
+        outputs:2,
+        outputLabels: ["Output", "Error"],
         icon: "minio.png",
         label: function() {
-            return this.name||"policies";
+            return this.policies_name||"Bucket Policy Operations";
         }
     });
+
+
+    // ====  FUNCTION TO TOGGLE ELEMENT DISPLAY  ===============================================
+	function toggleVisibilityPolicies(elementArray) {
+        let element;
+        for (element of elementArray) {
+            let x = document.getElementById(element[0]);
+            if (element[1]) {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+	}
+
+    // ====  FUNCTION TO DECIDE WHICH ELEMENTS TO DISPLAY  =====================================
+    function inputVisibilityPolicies(elementId) {
+        let selection = document.getElementById(elementId).value;
+        let bitwise = 0;
+
+        switch (selection) {
+            case "getBucketPolicy":
+                bitwise = 1;
+                break;
+            case "setBucketPolicy":
+                bitwise = 3;
+                break;
+            case "default":
+                bitwise = 0;
+        }
+
+        let elementArray = [];
+
+        let elementIds = [
+            [ 1,   "policies_bucketName" ],
+            [ 2,   "policies_bucketPolicy" ]
+        ]
+
+        for (elementId of elementIds) {
+            let isVisible = false;
+            
+            if (bitwise & elementId[0]) {
+                isVisible = true;
+            } 
+            elementArray.push([elementId[1], isVisible])
+        }
+        toggleVisibilityPolicies(elementArray)
+    }
+
+    window.onload = inputVisibilityPolicies;
+
 </script>
+
 
 <script type="text/html" data-template-name="policies">
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-input-policies_name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-policies_name" placeholder="MinIO File Operations">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-server"></i> MinIO Host</label>
+        <input type="text" id="node-input-host" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-policies_operation"><i class="fa fa-wrench"></i> Operation</label>
+        <select type="text" id="node-input-policies_operation" onchange="inputVisibilityPolicies('node-input-policies_operation')">
+            <option value="default">--Select File Object Operation--</option>
+            <option value="getBucketPolicy">getBucketPolicy</option>
+            <option value="setBucketPolicy">setBucketPolicy</option>
+        ;
+        </select>        
+    </div>
+    <div class="form-row" id="policies_bucketName" style="display: none">
+        <label for="node-input-policies_bucket"><i class="fa fa-database"></i> Bucket</label>
+        <input type="text" id="node-input-policies_bucket" placeholder="Bucket Name">
+    </div>
+    <div class="form-row" id="policies_bucketPolicy" style="display: none">
+        <label for="node-input-policies_policy"><i class="fa fa-book"></i> Policy</label>
+        <input type="text" id="node-input-policies_policy" placeholder="Policy">
     </div>
 </script>
+
 
 <script type="text/html" data-help-name="policies">
     <p>MinIO Bucket Policy Operations</p>

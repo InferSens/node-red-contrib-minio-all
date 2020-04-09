@@ -115,6 +115,7 @@ module.exports = function(RED) {
                     break;
                 // ====  LIST OBJECTS V2  ===========================================
                 case "listObjectsV2":
+                    console.log('listObjectsV2\nbucketName:', opParams.bucketName, '\nprefix:', opParams.prefix, '\nrecursive:', opParams.recursive, '\nstartAfter:', opParams.startAfter)
                     var stream = minioClient.listObjectsV2(opParams.bucketName,opParams.prefix, opParams.recursive,opParams.startAfter)
                     var objects = [];
                     stream.on('data',  function(obj) { objects.push(obj) } );

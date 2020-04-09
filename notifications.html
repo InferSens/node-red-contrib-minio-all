@@ -1,4 +1,3 @@
-
 <!--
   Copyright 2020 Colin Payne.
 
@@ -15,29 +14,135 @@
   limitations under the License.
 -->
 
-
 <script type="text/javascript">
+
     RED.nodes.registerType('notifications',{
         category: 'MinIO',
-        color: '#C52F4A',
+        // color: '#C52F4A',
+        color: '#E24360',
         defaults: {
-            name: {value:""}
-        },
+            notifications_name: {value:""},
+            host: {value:"", type:"minio-config", required:true},
+            notifications_operation: {value:""},
+            notifications_bucket: {value:""},
+            notifications_notificationconfig: {value:""},
+            notifications_prefix: {value:""},
+            notifications_suffix: {value:""},
+            notifications_events: {value:""}
+       },
         inputs:1,
-        outputs:1,
+        outputs:2,
+        outputLabels: ["Output", "Error"],
         icon: "minio.png",
         label: function() {
-            return this.name||"notifications";
+            return this.notifications_name||"Bucket Notification Operations";
         }
     });
+
+
+    // ====  FUNCTION TO TOGGLE ELEMENT DISPLAY  ===============================================
+	function toggleVisibilityNotifications(elementArray) {
+        let element;
+        for (element of elementArray) {
+            let x = document.getElementById(element[0]);
+            if (element[1]) {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+	}
+
+    // ====  FUNCTION TO DECIDE WHICH ELEMENTS TO DISPLAY  =====================================
+    function inputVisibilityNotifications(elementId) {
+        let selection = document.getElementById(elementId).value;
+        let bitwise = 0;
+
+        switch (selection) {
+            case "getBucketNotification":
+                bitwise = 1;
+                break;
+            case "setBucketNotification":
+                bitwise = 3;
+                break;
+            case "removeAllBucketNotification":
+                bitwise = 1;
+                break;
+            case "listenBucketNotification":
+                bitwise = 29;
+                break;
+            case "default":
+                bitwise = 0;
+        }
+
+        let elementArray = [];
+
+        let elementIds = [
+            [ 1,   "notifications_bucketName" ],
+            [ 2,   "notifications_bucketNotificationConfig" ],
+            [ 4,   "notifications_prefix" ],
+            [ 8,   "notifications_suffix" ],
+            [ 16,  "notifications_events" ]
+        ]
+
+        for (elementId of elementIds) {
+            let isVisible = false;
+            
+            if (bitwise & elementId[0]) {
+                isVisible = true;
+            } 
+            elementArray.push([elementId[1], isVisible])
+        }
+        toggleVisibilityNotifications(elementArray)
+    }
+
+    window.onload = inputVisibilityNotifications;
+
 </script>
+
 
 <script type="text/html" data-template-name="notifications">
     <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-input-notifications_name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-notifications_name" placeholder="MinIO File Operations">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-server"></i> MinIO Host</label>
+        <input type="text" id="node-input-host" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-notifications_operation"><i class="fa fa-wrench"></i> Operation</label>
+        <select type="text" id="node-input-notifications_operation" onchange="inputVisibilityNotifications('node-input-notifications_operation')">
+            <option value="default">--Select File Object Operation--</option>
+            <option value="getBucketNotification">getBucketNotification</option>
+            <option value="setBucketNotification">setBucketNotification</option>
+            <option value="removeAllBucketNotification">removeAllBucketNotification</option>
+            <option value="listenBucketNotification">listenBucketNotification</option>
+        ;
+        </select>        
+    </div>
+    <div class="form-row" id="notifications_bucketName" style="display: none">
+        <label for="node-input-notifications_bucket"><i class="fa fa-database"></i> Bucket</label>
+        <input type="text" id="node-input-notifications_bucket" placeholder="Bucket Name">
+    </div>
+    <div class="form-row" id="notifications_bucketNotificationConfig" style="display: none">
+        <label for="node-input-notifications_object"><i class="fa fa-cogs"></i> Config</label>
+        <input type="text" id="node-input-notifications_object" placeholder="Bucket Notification Config">
+    </div>
+    <div class="form-row" id="notifications_prefix" style="display: none">
+        <label for="node-input-notifications_prefix"><i class="fa fa-step-backward"></i> Prefix</label>
+        <input type="text" id="node-input-notifications_prefix" placeholder="Prefix">
+    </div>
+    <div class="form-row" id="notifications_suffix" style="display: none">
+        <label for="node-input-notifications_suffix"><i class="fa fa-step-forward"></i> Suffix</label>
+        <input type="text" id="node-input-notifications_suffix" placeholder="Suffix">
+    </div>
+    <div class="form-row" id="notifications_events" style="display: none">
+        <label for="node-input-notifications_events"><i class="fa fa-exclamation-circle"></i> Events</label>
+        <input type="text" id="node-input-notifications_events" placeholder="Events">
     </div>
 </script>
+
 
 <script type="text/html" data-help-name="notifications">
     <p>MinIO Bucket Notification Operations</p>

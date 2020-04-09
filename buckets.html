@@ -18,7 +18,8 @@
 
     RED.nodes.registerType('buckets',{
         category: 'MinIO',
-        color: '#C52F4A',
+        // color: '#C52F4A',
+        color: '#E24360',
         defaults: {
             buckets_name: {value:""},
             host: {value:"", type:"minio-config", required:true},
@@ -112,6 +113,10 @@
 </script>
 
 
+
+
+<!-- ====  NODE EDIT FORM  ==================================================================================== -->
+
 <script type="text/html" data-template-name="buckets">
     <div class="form-row">
         <label for="node-input-buckets_name"><i class="fa fa-tag"></i> Name</label>
@@ -167,12 +172,267 @@
         <input type="checkbox" id="node-input-buckets_recursive" value="false">
     </div>
     <div class="form-row" id="buckets_startAfter" style="display: none">
-        <label for="node-input-buckets_start_after"><i class="fa fa-calendar"></i> Start After</label>
-        <input type="text" id="node-input-buckets_start_after" placeholder="Date when the URL will be issued (optional)">
+        <label for="node-input-buckets_start_after"><i class="fa fa-arrow-down"></i> Start After</label>
+        <input type="text" id="node-input-buckets_start_after" placeholder="List objects after this object name (optional)">
     </div>
 </script>
 
 
+
+
+
+<!-- ====  NODE HELP INFORMATION  ==================================================================================== -->
+
 <script type="text/html" data-help-name="buckets">
-    <p>MinIO Bucket Operations</p>
+
+    <h1>MinIO Bucket Operations</h1>
+    <p>For each operation, paramenters can either be set in the Edit Node dialogue, 
+    or passed in to the node via the node input. Parameters passed in will override any parameters 
+    set in the Edit Node dialogue.</p>
+    <p>The bucket <b><i>Operation</i></b> can be passed in to the node by setting the appropriate incoming value of <code>msg.operation</code></p>
+    
+    <h2>1. <i>makeBucket</i></h2>
+    
+    <h3>Description</h3>
+    <p>Creates a new bucket.</p>
+    
+    <h3>Parameters</h3>
+    
+    <table>
+        <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
+
+        <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket to be created.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-globe">&#x202F;</i></td><td valign="top"><b>Region</b></td><td><b><code>region</code></b> ( <code>msg.region</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Region where the bucket is to be created. (optional)</td></tr>
+
+    </table>
+    
+    <h3>Node Outputs</h3>
+    <table>
+        <tr>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the bucket was created, e.g. <code>{"makeBucket":true}</code></td>
+        </tr>
+        <tr>
+            <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will br passed to the node's 'Error' output.</td>
+        </tr>
+    </table>
+    
+    <hr>
+
+
+    <h2>2. <i>listBuckets</i></h2>
+    
+    <h3>Description</h3>
+    <p>List all buckets.</p>
+    
+    <h3>Node Outputs</h3>
+    <table>
+        <tr>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output a JS object in the form <code>{"listBuckets":[...]}</code> containing an array of objects in the form <code>{"name":"bucketname","creationDate": "yyyy-mm-ddThh:mm:ss.sssZ"}</code> for each bucket.</td>
+        </tr>
+        <tr>
+            <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will br passed to the node's 'Error' output.</td>
+        </tr>
+    </table>
+
+    <hr>
+
+
+    <h2>3. <i>bucketExists</i></h2>
+    
+    <h3>Description</h3>
+    <p>Checks if a bucket exists.</p>
+    
+    <h3>Parameters</h3>
+    
+    <table>
+        <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
+
+        <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket to be checked.</td></tr>
+
+    </table>
+    
+    <h3>Node Outputs</h3>
+    <table>
+        <tr>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the bucket exists, e.g. <code>{"bucketExists":true}</code></td>
+        </tr>
+        <tr>
+            <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will br passed to the node's 'Error' output.</td>
+        </tr>
+    </table>
+    
+    <hr>
+
+    
+    <h2>4. <i>removeBucket</i></h2>
+    
+    <h3>Description</h3>
+    <p>Removes a bucket.</p>
+    
+    <h3>Parameters</h3>
+    
+    <table>
+        <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
+
+        <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket to be removed.</td></tr>
+
+    </table>
+    
+    <h3>Node Outputs</h3>
+    <table>
+        <tr>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the bucket has been removed, e.g. <code>{"removeBucket":true}</code></td>
+        </tr>
+        <tr>
+            <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will br passed to the node's 'Error' output.</td>
+        </tr>
+    </table>
+    
+    <hr>
+
+
+    <h2>5. <i>listObjects</i></h2>
+    
+    <h3>Description</h3>
+    <p>Lists all objects in a bucket.</p>
+    
+    <h3>Parameters</h3>
+    <table>
+        <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
+
+        <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket for which the objects listing is required.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-step-backward">&#x202F;</i></td><td valign="top"><b>Prefix</b></td><td><b><code>prefix</code></b> ( <code>msg.prefix</code> )</td></tr>
+        <tr><td> </td><td colspan=2>The prefix of the objects that should be listed. (optional).</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-repeat">&#x202F;</i></td><td valign="top"><b>Recursive</b></td><td><b><code>recursive</code></b> ( <code>msg.recursive</code> )</i></td></tr>
+        <tr><td> </td><td colspan=2><code>true</code> indicates recursive style listing and <code>false</code> indicates directory style listing delimited by '/'. (optional, default <code>false</code>).</td></tr>
+
+    </table>
+    
+    <h3>Node Outputs</h3>
+    <table>
+        <tr>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output a JS object in the form <code>{"listObjects":[...]}</code> containing an array of JS objects in the form <code>{"name":"objectname", "lastModified": "yyyy-mm-ddThh:mm:ss.sssZ", "etag":"etagstring", "size":1234}</code> for each object returned.</td>
+        </tr>
+        <tr>
+            <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will br passed to the node's 'Error' output.</td>
+        </tr>
+    </table>
+    
+    <hr>
+
+
+    <h2>6. <i>listObjectsV2</i></h2>
+    
+    <h3>Description</h3>
+    <p>Lists all objects in a bucket using S3 listing objects V2 API.</p>
+    
+    <h3>Parameters</h3>
+    <table>
+        <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
+
+        <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket for which the objects listing is required.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-step-backward">&#x202F;</i></td><td valign="top"><b>Prefix</b></td><td><b><code>prefix</code></b> ( <code>msg.prefix</code> )</td></tr>
+        <tr><td> </td><td colspan=2>The prefix of the objects that should be listed. (optional).</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-repeat">&#x202F;</i></td><td valign="top"><b>Recursive</b></td><td><b><code>recursive</code></b> ( <code>msg.recursive</code> )</i></td></tr>
+        <tr><td> </td><td colspan=2><code>true</code> indicates recursive style listing and <code>false</code> indicates directory style listing delimited by '/'. (optional, default <code>false</code>).</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrow-down">&#x202F;</i></td><td valign="top"><b>Start After</b></td><td><b><code>startAfter</code></b> ( <code>msg.startAfter</code> )</i></td></tr>
+        <tr><td> </td><td colspan=2>Specifies the object name to start after, when listing objects in a bucket. (optional).</td></tr>
+
+    </table>
+    
+    <h3>Node Outputs</h3>
+    <table>
+        <tr>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output a JS object in the form <code>{"listObjectsV2":[...]}</code> containing an array of JS objects in the form <code>{"name":"objectname", "lastModified": "yyyy-mm-ddThh:mm:ss.sssZ", "etag":"etagstring", "size":1234}</code> for each object returned.</td>
+        </tr>
+        <tr>
+            <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will br passed to the node's 'Error' output.</td>
+        </tr>
+    </table>
+    
+    <hr>
+
+
+    <h2>7. <i>listObjectsV2WithMetadata</i></h2>
+    
+    <h3>Description</h3>
+    <p>Lists all objects and their metadata in a bucket using S3 listing objects V2 API.</p>
+    
+    <h3>Parameters</h3>
+    <table>
+        <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
+
+        <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket for which the objects listing is required.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-step-backward">&#x202F;</i></td><td valign="top"><b>Prefix</b></td><td><b><code>prefix</code></b> ( <code>msg.prefix</code> )</td></tr>
+        <tr><td> </td><td colspan=2>The prefix of the objects that should be listed. (optional).</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-repeat">&#x202F;</i></td><td valign="top"><b>Recursive</b></td><td><b><code>recursive</code></b> ( <code>msg.recursive</code> )</i></td></tr>
+        <tr><td> </td><td colspan=2><code>true</code> indicates recursive style listing and <code>false</code> indicates directory style listing delimited by '/'. (optional, default <code>false</code>).</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrow-down">&#x202F;</i></td><td valign="top"><b>Start After</b></td><td><b><code>startAfter</code></b> ( <code>msg.startAfter</code> )</i></td></tr>
+        <tr><td> </td><td colspan=2>Specifies the object name to start after, when listing objects in a bucket. (optional).</td></tr>
+
+    </table>
+    
+    <h3>Node Outputs</h3>
+    <table>
+        <tr>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output a JS object in the form <code>{"listObjectsV2WithMetadata":[...]}</code> containing an array of JS objects in the form <code>{"name":"objectname", "lastModified": "yyyy-mm-ddThh:mm:ss.sssZ", "etag":"etagstring", "size":1234}</code> for each object returned.</td>
+        </tr>
+        <tr>
+            <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will br passed to the node's 'Error' output.</td>
+        </tr>
+    </table>
+    
+    <hr>
+
+
+    <h2>8. <i>listIncompleteUploads</i></h2>
+    
+    <h3>Description</h3>
+    <p>Lists partially uploaded objects in a bucket.</p>
+    
+    <h3>Parameters</h3>
+    <table>
+        <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
+
+        <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-step-backward">&#x202F;</i></td><td valign="top"><b>Prefix</b></td><td><b><code>prefix</code></b> ( <code>msg.prefix</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Prefix of the object names that are partially uploaded. (optional).</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-repeat">&#x202F;</i></td><td valign="top"><b>Recursive</b></td><td><b><code>recursive</code></b> ( <code>msg.recursive</code> )</i></td></tr>
+        <tr><td> </td><td colspan=2><code>true</code> indicates recursive style listing and <code>false</code> indicates directory style listing delimited by '/'. (optional, default <code>false</code>).</td></tr>
+
+    </table>
+    
+    <h3>Node Outputs</h3>
+    <table>
+        <tr>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output a JS object in the form <code>{"listIncompleteUploads":[...]}</code> containing an array of JS objects in the form <code>{"key":"objectname", "uploadId": "uploadidstring", "size":1234}</code> for each object returned.</td>
+        </tr>
+        <tr>
+            <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will br passed to the node's 'Error' output.</td>
+        </tr>
+    </table>
+    
+    <hr>
+
+
+
 </script>

@@ -51,8 +51,6 @@ module.exports = function(RED) {
             helpers.setStatus(node, node.minioInstance.minioStatus);
             
             var minioClient = node.minioInstance.initialize();
-
-            // console.log('node.minioClient =', minioClient );
         }
 
         // TRIGGER ON INCOMING MESSAGE
