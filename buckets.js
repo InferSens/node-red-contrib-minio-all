@@ -60,11 +60,11 @@ module.exports = function(RED) {
         // TRIGGER ON INCOMING MESSAGE
         node.on('input', function(msg) {
             // If values are provided in the incoming message, then they override those in the node configuration
-            node.operation = (msg.operation) ? msg.operation : node.operation;
+            node.operation      = (msg.operation) ? msg.operation : node.operation;
             opParams.bucketName = (msg.bucketName) ? msg.bucketName : opParams.bucketName;
-            opParams.region = (msg.region) ? msg.region : opParams.region;
-            opParams.prefix = (msg.prefix) ? msg.prefix : opParams.prefix;
-            opParams.recursive = (typeof msg.recursive === 'boolean') ? msg.recursive : opParams.recursive;
+            opParams.region     = (msg.region) ? msg.region : opParams.region;
+            opParams.prefix     = (msg.prefix) ? msg.prefix : opParams.prefix;
+            opParams.recursive  = (typeof msg.recursive === 'boolean') ? msg.recursive : opParams.recursive;
             opParams.startAfter = (msg.startAfter) ? msg.startAfter : opParams.startAfter;
             
             // Trigger Bucket Operation type based on "operation" selected in node configuration

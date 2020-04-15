@@ -32,6 +32,9 @@ module.exports = function(RED) {
         this.sourceobject  = config.objects_sourceobject;
         this.conditions    = config.objects_conditions;
         this.objectslist   = config.objects_objectslist;
+        this.prefix        = config.objects_prefix;
+        this.etag          = config.objects_etag;
+        this.datetime      = config.objects_datetime;
 
         var node = this;
 
@@ -45,7 +48,10 @@ module.exports = function(RED) {
             'metaData'     : node.metadata,
             'sourceObject' : node.sourceobject,
             'conditions'   : node.conditions,
-            'objectsList'  : node.objectslist           
+            'objectsList'  : node.objectslist,           
+            'prefix'       : node.prefix,         
+            'etag'         : node.etag,         
+            'dateTime'     : node.datetime         
         }
 
         // retrive the values from the minio-config node
@@ -78,7 +84,10 @@ module.exports = function(RED) {
             opParams.metaData     = (msg.metaData) ? msg.metaData : opParams.metaData;
             opParams.sourceObject = (msg.sourceObject) ? msg.sourceObject : opParams.sourceObject;
             opParams.conditions   = (msg.conditions) ? msg.conditions : opParams.conditions;
-            opParams.objectsList  = (msg.objectsList) ? msg.objectsList : opParams.objectsLista;
+            opParams.objectsList  = (msg.objectsList) ? msg.objectsList : opParams.objectsList;
+            opParams.prefix       = (msg.prefix) ? msg.prefix : opParams.prefix;
+            opParams.etag         = (msg.etag) ? msg.etag : opParams.etag;
+            opParams.dateTime     = (msg.dateTime) ? msg.dateTime : opParams.dateTime;
             
             // Trigger Bucket Operation type based on "operation" selected in node configuration
             switch (node.operation) {                
@@ -87,7 +96,7 @@ module.exports = function(RED) {
                 case "getObject":
                     // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
                     var size = 0
-                    minioClient.getObject('mybucket', 'photo.jpg', function(err, dataStream) {
+                    minioClient.getObject(opParams.bucketName, opParams.objectName, function(err, dataStream) {
                         if (err) {
                             return console.log(err)
                         }
@@ -107,8 +116,7 @@ module.exports = function(RED) {
                 case "getPartialObject":
                     // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
                     var size = 0
-                    // reads 30 bytes from the offset 10.
-                    minioClient.getPartialObject('mybucket', 'photo.jpg', 10, 30, function(err, dataStream) {
+                    minioClient.getPartialObject(opParams.bucketName, opParams.objectName, opParams.offset, opParams.length, function(err, dataStream) {
                         if (err) {
                             return console.log(err)
                         }
@@ -126,96 +134,140 @@ module.exports = function(RED) {
 
                 // ====  PUT OBJECT  ===================================================
                 case "putObject":
-                    // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
-                    // As a stream:
-                    var Fs = require('fs')
-                    var file = '/tmp/40mbfile'
-                    var fileStream = Fs.createReadStream(file)
-                    var fileStat = Fs.stat(file, function(err, stats) {
+                    minioClient.putObject(opParams.bucketName, opParams.objectName, opParams.stream, function(err, etag) {
                         if (err) {
-                            return console.log(err)
+                            node.error = err;
+                            node.output  = { 'putObject': false };
+                        } else {
+                            node.error = null;
+                            node.output  = {
+                                'putObject': true,
+                                'etag': etag
+                            };
                         }
-                        minioClient.putObject('mybucket', '40mbfile', fileStream, stats.size, function(err, etag) {
-                            return console.log(err, etag) // err should be null
-                        })
-                    })
-                    
-                    
-                    // Or as a string or buffer:
-                    var buffer = 'Hello World'
-                    minioClient.putObject('mybucket', 'hello-file', buffer, function(err, etag) {
-                        return console.log(err, etag) // err should be null
                     })
                     break;
 
                 // ====  COPY OBJECT  ==================================================
                 case "copyObject":
-                    // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
-                    var conds = new Minio.CopyConditions()
-                    conds.setMatchETag('bd891862ea3e22c93ed53a098218791d')
-                    minioClient.copyObject('mybucket', 'newobject', '/mybucket/srcobject', conds, function(e, data) {
-                        if (e) {
-                            return console.log(e)
+                    var Minio = require('minio');
+                    var conds = new Minio.CopyConditions();
+                    console.log('opParams.conditions', opParams.conditions);
+                    switch (opParams.conditions) {
+                        case "setMatchETag":
+                            console.log('opParams.etag', opParams.etag);
+                            conds.setMatchETag(opParams.etag);
+                            break;
+                        case "setMatchETagExcept":
+                            console.log('opParams.etag', opParams.etag);
+                            conds.setMatchETagExcept(opParams.etag);
+                            break;
+                        case "setModified":
+                            var d = new Date(opParams.dateTime);
+                            console.log('opParams.dateTime', d);
+                            conds.setModified(d);
+                            break;
+                        case "setReplaceMetadataDirective":
+                            conds.setReplaceMetadataDirective();
+                            break;
+                        case "setUnmodified":
+                            console.log('opParams.dateTime', opParams.dateTime);
+                            conds.setUnmodified(opParams.dateTime);
+                            break;
+                        case "copyDefault":
+                            break;
+                    }
+
+                    console.log('conds', conds);
+
+                    minioClient.copyObject(opParams.bucketName, opParams.objectName, opParams.sourceObject, conds, function(err, data) {
+                        if (err) {
+                            node.error = err;
+                            node.output  = { 'copyObject': false };
+                        } else {
+                            node.error = null;
+                            node.output  = {
+                                'copyObject': true,
+                                'etag': data.etag,
+                                'lastModified': data.lastModified
+                            };
                         }
-                        console.log("Successfully copied the object:")
-                        console.log("etag = " + data.etag + ", lastModified = " + data.lastModified)
                     })                
                     break;
 
                 // ====  STAT OBJECT  ==================================================
                 case "statObject":
-                    // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
-                    minioClient.statObject('mybucket', 'photo.jpg', function(err, stat) {
+                    minioClient.statObject(opParams.bucketName, opParams.objectName, function(err, stat) {
                         if (err) {
-                            return console.log(err)
+                            node.error = err;
+                            node.output  = { 'statObject': false };
+                        } else {
+                            node.error = null;
+                            node.output  = {
+                                'statObject': true,
+                                'stat': stat
+                            };
                         }
-                        console.log(stat)
                     })
                     break;
 
                 // ====  REMOVE OBJECT  ================================================
                 case "removeObject":
-                    // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
-                    minioClient.removeObject('mybucket', 'photo.jpg', function(err) {
+                    minioClient.removeObject(opParams.bucketName, opParams.objectName, function(err) {
                         if (err) {
-                            return console.log('Unable to remove object', err)
+                            node.error = err;
+                            node.output  = { 'removeObject': false };
+                        } else {
+                            node.error = null;
+                            node.output  = { 'removeObject': true };
                         }
-                        console.log('Removed the object')
                     })
                     break;
 
                 // ====  REMOVE OBJECTS  ===============================================
                 case "removeObjects":
-                    // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
-                    var objectsList = []
-
-                    // List all object paths in bucket my-bucketname.
-                    var objectsStream = s3Client.listObjects('my-bucketname', 'my-prefixname', true)
-                    
-                    objectsStream.on('data', function(obj) {
-                        objectsList.push(obj.name);
-                    })
-                    
-                    objectsStream.on('error', function(e) {
-                        console.log(e);
-                    })
-                    
-                    objectsStream.on('end', function() {
-                    
-                        s3Client.removeObjects('my-bucketname',objectsList, function(e) {
-                            if (e) {
-                                return console.log('Unable to remove Objects ',e)
+                    if (opParams.objectsList) {
+                        minioClient.removeObjects(opParams.bucketName,JSON.parse(opParams.objectsList), function(err) {
+                            if (err) {
+                                node.error = err;
+                                node.output  = { 'removeObjects': false };
+                            } else {
+                                node.error = null;
+                                node.output  = { 'removeObjects': true };
                             }
-                            console.log('Removed the objects successfully')
                         })
+                    } else {
+                        var objectsList = []    
                     
-                    })
+                        var objectsStream = minioClient.listObjects(opParams.bucketName, opParams.prefix, true)
+    
+                        objectsStream.on('data', function(obj) {
+                            objectsList.push(obj.name);
+                        })
+    
+                        objectsStream.on('error', function(e) {
+                            console.log(e);
+                        })
+                        
+                        objectsStream.on('end', function() {
+                            minioClient.removeObjects(opParams.bucketName,objectsList, function(err) {
+                                if (err) {
+                                    node.error = err;
+                                    node.output  = { 'removeObjects': false };
+                                } else {
+                                    node.error = null;
+                                    node.output  = { 'removeObjects': true };
+                                }
+                            })
+                        
+                        })
+                    }
                     break;
 
                 // ====  REMOVE INCOMPLETE UPLOAD  =====================================
                 case "removeIncompleteUpload":
                     // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
-                    minioClient.removeIncompleteUpload('mybucket', 'photo.jpg', function(err) {
+                    minioClient.removeIncompleteUpload(opParams.bucketName, opParams.objectName, function(err) {
                         if (err) {
                             return console.log('Unable to remove incomplete object', err)
                         }
