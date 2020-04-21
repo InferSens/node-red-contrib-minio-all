@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Colin Payne.
+ * Copyright © 2020 Colin Payne.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,13 @@ module.exports = function(RED) {
 
     function setMinioStatus(node, minioStatus) {
         node.minioStatus = minioStatus;
-        
+        // console.log('minioStatus', minioStatus)
         // Pass the new status to all the available listeners
         node.emit('minio_status', minioStatus);
     }
 
     function MinioConfigNode(config) {
+
         RED.nodes.createNode(this,config);
         this.name =   config.name;
 	    this.host =   config.host;
@@ -37,21 +38,30 @@ module.exports = function(RED) {
         // Prevents a limit being placed on number of event listeners (otherwise max of 10 by default):
         node.setMaxListeners(0);
 
+        setMinioStatus(node, "disconnected");
+
         node.initialize = function() {
 
-            setMinioStatus(node, "connecting");
+            try {
+                setMinioStatus(node, "connecting");
 
-            this.minioClient = new Minio.Client({
-                endPoint: this.host,
-                port: this.port,
-                useSSL: this.useSsl,
-                accessKey: this.credentials.accessKey,
-                secretKey: this.credentials.secretKey
-            });
+                // console.log("trying to connect!");
 
-            setMinioStatus(node, "connected");
-
-            return this.minioClient;
+                this.minioClient = new Minio.Client({
+                    endPoint: this.host,
+                    port: this.port,
+                    useSSL: this.useSsl,
+                    accessKey: this.credentials.accessKey,
+                    secretKey: this.credentials.secretKey
+                });
+    
+                setMinioStatus(node, "connected");
+    
+                return this.minioClient;    
+            }
+            catch(err) {
+                setMinioStatus(node, err);
+            }
         }
 
         node.on('close', function(){

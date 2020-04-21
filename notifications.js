@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Colin Payne.
+ * Copyright © 2020 Colin Payne.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,19 +42,9 @@ module.exports = function(RED) {
         node.minioInstance = RED.nodes.getNode(config.host);
 
         if (node.minioInstance) {
-            node.listener = function(minioStatus) {
-                helpers.setStatus(node, minioStatus);
-            }
-            
-            // Start listening for MinIO config node status changes
-            node.minioInstance.addListener("minio_status", node.listener);
-            
-            // Show the current MinIO config node status
-            helpers.setStatus(node, node.minioInstance.minioStatus);
-            
             var minioClient = node.minioInstance.initialize();
         }
-
+ 
         // TRIGGER ON INCOMING MESSAGE
         node.on('input', function(msg) {
             // If values are provided in the incoming message, then they override those set in the node configuration

@@ -1,5 +1,5 @@
 <!--
-  Copyright 2020 Colin Payne.
+  Copyright © 2020 Colin Payne.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@
 
     RED.nodes.registerType('policies',{
         category: 'MinIO',
-        // color: '#C52F4A',
-        color: '#E24360',
+        color: '#E24360', // Lighter version of the MinIO brand colour (#C52F4A) worked better with black text
         defaults: {
             policies_name: {value:""},
             host: {value:"", type:"minio-config", required:true},
@@ -36,8 +35,7 @@
         }
     });
 
-
-    // ====  FUNCTION TO TOGGLE ELEMENT DISPLAY  ===============================================
+    // ====  FUNCTION TO TOGGLE FORM ELEMENT DISPLAY  ===============================================
 	function toggleVisibilityPolicies(elementArray) {
         let element;
         for (element of elementArray) {
@@ -50,7 +48,7 @@
         }
 	}
 
-    // ====  FUNCTION TO DECIDE WHICH ELEMENTS TO DISPLAY  =====================================
+    // ====  FUNCTION TO DECIDE WHICH FORM ELEMENTS TO DISPLAY  =====================================
     function inputVisibilityPolicies(elementId) {
         let selection = document.getElementById(elementId).value;
         let bitwise = 0;
@@ -84,10 +82,11 @@
         toggleVisibilityPolicies(elementArray)
     }
 
-    window.onload = inputVisibilityPolicies;
-
 </script>
 
+
+
+<!-- ====  NODE EDIT FORM  ==================================================================================== -->
 
 <script type="text/html" data-template-name="policies">
     <div class="form-row">
@@ -116,9 +115,6 @@
         <input type="text" id="node-input-policies_policy" placeholder="Policy">
     </div>
 </script>
-
-
-
 
 
 <!-- ====  NODE HELP INFORMATION  ==================================================================================== -->
@@ -187,4 +183,8 @@
         </tr>
     </table>
       
+    <hr>
+
+    <p>Copyright © 2020 Colin Payne</p>
+
 </script>

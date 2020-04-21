@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Colin Payne.
+ * Copyright © 2020 Colin Payne.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,19 +40,9 @@ module.exports = function(RED) {
         node.minioInstance = RED.nodes.getNode(config.host);
 
         if (node.minioInstance) {
-            node.listener = function(minioStatus) {
-                helpers.setStatus(node, minioStatus);
-            }
-            
-            // Start listening for MinIO config node status changes
-            node.minioInstance.addListener("minio_status", node.listener);
-            
-            // Show the current MinIO config node status
-            helpers.setStatus(node, node.minioInstance.minioStatus);
-            
             var minioClient = node.minioInstance.initialize();
         }
-
+ 
         // TRIGGER ON INCOMING MESSAGE
         node.on('input', function(msg) {
             // If values are provided in the incoming message, then they override those set in the node configuration
@@ -67,13 +57,16 @@ module.exports = function(RED) {
                 
                 // ====  FILE GET OBJECT  ===========================================
                 case "fGetObject":
+                    helpers.statusUpdate(node, "blue", "dot", 'Getting object "' + opParams.objectName + '"');
                     minioClient.fGetObject(opParams.bucketName, opParams.objectName, opParams.filePath, function(err) {
                         if (err) {
                             node.output = { 'fGetObject': false };
                             node.error = err;
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                         } else {
                             node.output = { 'fGetObject': true };
                             node.error = null;
+                            helpers.statusUpdate(node, "green", "dot", 'Get object "' + opParams.objectName + '" successful', 3000);
                         }
                     })
                     break;
@@ -81,23 +74,29 @@ module.exports = function(RED) {
                 // ====  FILE PUT OBJECT  ===========================================
                 case "fPutObject":
                     if (opParams.metaData) {
+                        helpers.statusUpdate(node, "blue", "dot", 'Putting object "' + opParams.objectName + '"');
                         minioClient.fPutObject(opParams.bucketName, opParams.objectName, opParams.filePath, opParams.metaData, function(err, etag) {
                             if (err) {
                                 node.output = { 'fPutObject': false };
                                 node.error = err;
+                                helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             } else {
                                 node.output = { 'fPutObject': true, 'etag': etag };
                                 node.error = null;
+                                helpers.statusUpdate(node, "green", "dot", 'Put object "' + opParams.objectName + '" successful', 3000);
                             }
                         })
                     } else {
+                        helpers.statusUpdate(node, "blue", "dot", 'Putting object "' + opParams.objectName + '"');
                         minioClient.fPutObject(opParams.bucketName, opParams.objectName, opParams.filePath, function(err, etag) {
                             if (err) {
                                 node.output = { 'fPutObject': false };
                                 node.error = err;
+                                helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             } else {
                                 node.output = { 'fPutObject': true, 'etag': etag };
                                 node.error = null;
+                                helpers.statusUpdate(node, "green", "dot", 'Put object "' + opParams.objectName + '" successful', 3000);
                             }
                         })
                     }

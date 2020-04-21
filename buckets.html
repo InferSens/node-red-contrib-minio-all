@@ -1,5 +1,5 @@
 <!--
-  Copyright 2020 Colin Payne.
+  Copyright © 2020 Colin Payne.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 
 <script type="text/javascript">
 
+    // var helpers = require('./helpers');
+
     RED.nodes.registerType('buckets',{
         category: 'MinIO',
-        // color: '#C52F4A',
-        color: '#E24360',
+        color: '#E24360', // Lighter version of the MinIO brand colour (#C52F4A) worked better with black text
         defaults: {
             buckets_name: {value:""},
             host: {value:"", type:"minio-config", required:true},
@@ -39,9 +40,8 @@
         }
     });
 
-
-    // ====  FUNCTION TO TOGGLE ELEMENT DISPLAY  ===============================================
-	function toggleVisibility2(elementArray) {
+    // ====  FUNCTION TO TOGGLE FORM ELEMENT DISPLAY  ===============================================
+	function toggleVisibilityBuckets(elementArray) {
         let element;
         for (element of elementArray) {
             let x = document.getElementById(element[0]);
@@ -53,8 +53,8 @@
         }
 	}
 
-    // ====  FUNCTION TO DECIDE WHICH ELEMENTS TO DISPLAY  =====================================
-    function inputVisibility2(elementId) {
+    // ====  FUNCTION TO DECIDE WHICH FORM ELEMENTS TO DISPLAY  =====================================
+    function inputVisibilityBuckets(elementId) {
         let selection = document.getElementById(elementId).value;
         let bitwise = 0;
 
@@ -105,13 +105,11 @@
             } 
             elementArray.push([elementId[1], isVisible])
         }
-        toggleVisibility2(elementArray)
+        toggleVisibilityBuckets(elementArray)
+        // helpers.toggleVisibility(document, elementArray)
     }
 
-    // window.onload = inputVisibility2('node-input-buckets_operation');
-
 </script>
-
 
 
 
@@ -128,7 +126,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-buckets_operation"><i class="fa fa-wrench"></i> Operation</label>
-        <select type="text" id="node-input-buckets_operation" onchange="inputVisibility2('node-input-buckets_operation')">
+        <select type="text" id="node-input-buckets_operation" onchange="inputVisibilityBuckets(id)">
             <option value="default">--Select Bucket Operation--</option>
             <option value="makeBucket">makeBucket</option>
             <option value="listBuckets">listBuckets</option>
@@ -178,9 +176,6 @@
 </script>
 
 
-
-
-
 <!-- ====  NODE HELP INFORMATION  ==================================================================================== -->
 
 <script type="text/html" data-help-name="buckets">
@@ -191,6 +186,8 @@
     set in the Edit Node dialogue.</p>
     <p>The bucket <b><i>Operation</i></b> can be passed in to the node by setting the appropriate incoming value of <code>msg.operation</code></p>
     
+    <hr>
+
     <h2>1. <i>makeBucket</i></h2>
     
     <h3>Description</h3>
@@ -227,6 +224,9 @@
     <h3>Description</h3>
     <p>List all buckets.</p>
     
+    <h3>Parameters</h3>
+    <p>No parameters required.</p>
+
     <h3>Node Outputs</h3>
     <table>
         <tr>
@@ -433,6 +433,6 @@
     
     <hr>
 
-
+    <p>Copyright © 2020 Colin Payne</p>
 
 </script>

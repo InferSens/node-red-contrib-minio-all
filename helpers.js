@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Colin Payne.
+ * Copyright © 2020 Colin Payne.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,17 @@
  * limitations under the License.
  **/
 
-exports.setStatus = function(node, minioStatus) {
-    switch(minioStatus) {
-        case "unconfigured":
-            node.status({fill:"red",shape:"ring",text:minioStatus});
-            break;
-        case "conecting":
-            node.status({fill:"yellow",shape:"dot",text:minioStatus});
-            break;
-        case "disconnected":
-            node.status({fill:"red",shape:"ring",text:minioStatus});
-            break;
-        case "connected":
-            node.status({fill:"green",shape:"dot",text:minioStatus});
-            break;
-        case "":
-            node.status({});
-            break;
-        default:
-            node.status({fill:"red",shape:"ring",text:"unknown"});
+
+// ====  FUNCTION TO SET AND OPTIONALLY CLEAR A NODE'S STATUS  ========================
+exports.statusUpdate = function(node, fill, shape, text, linger=0) {
+    node.status({fill:fill,shape:shape,text:text});
+    if (linger > 0) {
+        setTimeout(function(){ node.status({}); }, linger);
     }
 };
 
-
-// ====  FUNCTION TO TOGGLE THE DISPLAY OF AN ARRAY OF ELEMENTS  ========================
-exports.toggleVisibility = function(elementArray) {
+// ====  FUNCTION TO TOGGLE THE DISPLAY OF AN ARRAY OF ELEMENTS - NOT CURRENTLY WORKING ========================
+exports.toggleVisibility = function(document, elementArray) {
     let element;
     for (element of elementArray) {
         let x = document.getElementById(element[0]);
@@ -48,7 +34,7 @@ exports.toggleVisibility = function(elementArray) {
             x.style.display = "none";
         }
     }
-}
+};
 
 
 

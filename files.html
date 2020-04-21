@@ -1,5 +1,5 @@
 <!--
-  Copyright 2020 Colin Payne.
+  Copyright © 2020 Colin Payne.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@
 
     RED.nodes.registerType('files',{
         category: 'MinIO',
-        // color: '#C52F4A',
-        color: '#E24360',
+        color: '#E24360', // Lighter version of the MinIO brand colour (#C52F4A) worked better with black text
         defaults: {
             files_name: {value:""},
             host: {value:"", type:"minio-config", required:true},
@@ -38,8 +37,7 @@
         }
     });
 
-
-    // ====  FUNCTION TO TOGGLE ELEMENT DISPLAY  ===============================================
+    // ====  FUNCTION TO TOGGLE FORM ELEMENT DISPLAY  ===============================================
 	function toggleVisibilityFiles(elementArray) {
         let element;
         for (element of elementArray) {
@@ -52,7 +50,7 @@
         }
 	}
 
-    // ====  FUNCTION TO DECIDE WHICH ELEMENTS TO DISPLAY  =====================================
+    // ====  FUNCTION TO DECIDE WHICH FORM ELEMENTS TO DISPLAY  =====================================
     function inputVisibilityFiles(elementId) {
         let selection = document.getElementById(elementId).value;
         let bitwise = 0;
@@ -88,10 +86,11 @@
         toggleVisibilityFiles(elementArray)
     }
 
-    window.onload = inputVisibilityFiles;
-
 </script>
 
+
+
+<!-- ====  NODE EDIT FORM  ==================================================================================== -->
 
 <script type="text/html" data-template-name="files">
     <div class="form-row">
@@ -104,7 +103,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-files_operation"><i class="fa fa-wrench"></i> Operation</label>
-        <select type="text" id="node-input-files_operation" onchange="inputVisibilityFiles('node-input-files_operation')">
+        <select type="text" id="node-input-files_operation" onchange="inputVisibilityFiles(id)">
             <option value="default">--Select File Object Operation--</option>
             <option value="fGetObject">fGetObject</option>
             <option value="fPutObject">fPutObject</option>
@@ -131,8 +130,6 @@
 
 
 
-
-
 <!-- ====  NODE HELP INFORMATION  ==================================================================================== -->
 
 <script type="text/html" data-help-name="files">
@@ -143,6 +140,8 @@
     set in the Edit Node dialogue.</p>
     <p>The bucket <b><i>Operation</i></b> can be passed in to the node by setting the appropriate incoming value of <code>msg.operation</code></p>
     
+    <hr>
+
     <h2>1. <i>fGetObject</i></h2>
     
     <h3>Description</h3>
@@ -212,5 +211,9 @@
         </tr>
     </table>
 
+    <hr>
+    
+    <p>Copyright © 2020 Colin Payne</p>
 
 </script>
+

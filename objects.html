@@ -1,5 +1,5 @@
 <!--
-  Copyright 2020 Colin Payne.
+  Copyright © 2020 Colin Payne.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@
 
     RED.nodes.registerType('objects',{
         category: 'MinIO',
-        // color: '#C52F4A',
-        color: '#E24360',
+        color: '#E24360', // Lighter version of the MinIO brand colour (#C52F4A) worked better with black text
         defaults: {
             objects_name: {value:""},
             host: {value:"", type:"minio-config", required:true},
@@ -47,8 +46,7 @@
         }
     });
 
-
-    // ====  FUNCTION TO TOGGLE ELEMENT DISPLAY  ===============================================
+    // ====  FUNCTION TO TOGGLE FORM ELEMENT DISPLAY  ===============================================
 	function toggleVisibilityObjects(elementArray) {
         let element;
         for (element of elementArray) {
@@ -61,99 +59,94 @@
         }
 	}
 
-    // ====  FUNCTION TO DECIDE WHICH ELEMENTS TO DISPLAY  =====================================
+    // ====  FUNCTION TO DECIDE WHICH FORM ELEMENTS TO DISPLAY  =====================================
     function inputVisibilityObjects(elementId) {
         let selection = document.getElementById(elementId).value;
-        let bitwise = 0;
+        if (selection) {
+            let bitwise = 0;
 
-        switch (selection) {
-            case "getObject":
-                bitwise = 3;
-                break;
-            case "getPartialObject":
-                bitwise = 15;
-                break;
-            case "putObject":
-                bitwise = 115;
-                break;
-            case "copyObject":
-                bitwise = 387;
-                break;
-            case "statObject":
-                bitwise = 3;
-                break;
-            case "removeObject":
-                bitwise = 3;
-                break;
-            case "removeObjects":
-                bitwise = 1537;
-                break;
-            case "removeIncompleteUpload":
-                bitwise = 3;
-                break;
-            case "setMatchETag":
-                bitwise = 2435;
-                break;
-            case "setMatchETagExcept":
-                bitwise = 2435;
-                break;
-            case "setModified":
-                bitwise = 4483;
-                break;
-            case "setReplaceMetadataDirective":
-                bitwise = 451;
-                break;
-            case "setUnmodified":
-                bitwise = 4483;
-                break;
-            case "copyDefault":
-                bitwise = 387;
-                break;
-            case "default":
-                bitwise = 0;
+            switch (selection) {
+                case "getObject":
+                    bitwise = 3;
+                    break;
+                case "getPartialObject":
+                    bitwise = 15;
+                    break;
+                case "putObject":
+                    bitwise = 115;
+                    break;
+                case "copyObject":
+                    bitwise = 387;
+                    break;
+                case "statObject":
+                    bitwise = 3;
+                    break;
+                case "removeObject":
+                    bitwise = 3;
+                    break;
+                case "removeObjects":
+                    bitwise = 1537;
+                    break;
+                case "removeIncompleteUpload":
+                    bitwise = 3;
+                    break;
+                case "setMatchETag":
+                    bitwise = 2435;
+                    break;
+                case "setMatchETagExcept":
+                    bitwise = 2435;
+                    break;
+                case "setModified":
+                    bitwise = 4483;
+                    break;
+                case "setReplaceMetadataDirective":
+                    bitwise = 451;
+                    break;
+                case "setUnmodified":
+                    bitwise = 4483;
+                    break;
+                case "copyDefault":
+                    bitwise = 387;
+                    break;
+                case "default":
+                    bitwise = 0;
+            }
+    
+            let elementArray = [];
+
+            let elementIds = [
+                [ 1,    "objects_bucketName" ],
+                [ 2,    "objects_objectName" ],
+                [ 4,    "objects_offset" ],
+                [ 8,    "objects_length" ],
+                [ 16,   "objects_stream" ],
+                [ 32,   "objects_size" ],
+                [ 64,   "objects_metaData" ],
+                [ 128,  "objects_sourceObject" ],
+                [ 256,  "objects_conditions" ],
+                [ 512,  "objects_objectsList" ],
+                [ 1024, "objects_prefix" ],
+                [ 2048, "objects_etag" ],
+                [ 4096, "objects_dateTime" ]
+            ]
+
+            for (elementId of elementIds) {
+                let isVisible = false;
+                
+                if (bitwise & elementId[0]) {
+                    isVisible = true;
+                } 
+                elementArray.push([elementId[1], isVisible]);
+            }
+            toggleVisibilityObjects(elementArray);
         }
-
-        let elementArray = [];
-
-        let elementIds = [
-            [ 1,    "objects_bucketName" ],
-            [ 2,    "objects_objectName" ],
-            [ 4,    "objects_offset" ],
-            [ 8,    "objects_length" ],
-            [ 16,   "objects_stream" ],
-            [ 32,   "objects_size" ],
-            [ 64,   "objects_metaData" ],
-            [ 128,  "objects_sourceObject" ],
-            [ 256,  "objects_conditions" ],
-            [ 512,  "objects_objectsList" ],
-            [ 1024, "objects_prefix" ],
-            [ 2048, "objects_etag" ],
-            [ 4096, "objects_dateTime" ]
-        ]
-
-        for (elementId of elementIds) {
-            let isVisible = false;
-            
-            if (bitwise & elementId[0]) {
-                isVisible = true;
-            } 
-            elementArray.push([elementId[1], isVisible])
-        }
-        toggleVisibilityObjects(elementArray)
     }
- 
-    // window.onload = function (){
-    //     console.log('node-input-objects_operation: ',node-input-objects_operation);
-    //     let selectedOperation = document.getElementById('node-input-objects_operation').value;
-    //     if (selectedOperation == "copyObject") {
-    //         inputVisibilityObjects('node-input-objects_conditions');
-    //     } else {
-    //         inputVisibilityObjects('node-input-objects_operation');
-    //     }
-    // };
-
+    
 </script>
 
+
+
+<!-- ====  NODE EDIT FORM  ==================================================================================== -->
 
 <script type="text/html" data-template-name="objects">
     <div class="form-row">
@@ -166,7 +159,7 @@
     </div>
     <div class="form-row">
         <label for="node-input-objects_operation"><i class="fa fa-wrench"></i> Operation</label>
-        <select type="text" id="node-input-objects_operation" onchange="inputVisibilityObjects('node-input-objects_operation')">
+        <select type="text" id="node-input-objects_operation" onchange="inputVisibilityObjects(id)">
             <option value="default">--Select File Object Operation--</option>
             <option value="getObject">getObject</option>
             <option value="getPartialObject">getPartialObject</option>
@@ -189,7 +182,7 @@
     </div>
     <div class="form-row" id="objects_offset" style="display: none">
         <label for="node-input-objects_offset"><i class="fa fa-wrench"></i> Offset</label>
-        <input type="text" id="node-input-objects_offset" placeholder="Offset">
+        <input type="text" id="node-input-objects_offset" placeholder="Offset from where the stream will start.">
     </div>
     <div class="form-row" id="objects_length" style="display: none">
         <label for="node-input-objects_length"><i class="fa fa-arrows-h"></i> Length</label>
@@ -209,8 +202,7 @@
     </div>
     <div class="form-row" id="objects_conditions" style="display: none">
         <label for="node-input-objects_conditions"><i class="fa fa-book"></i> Conditions</label>
-        <!-- <select type="text" id="node-input-objects_conditions" onchange="inputVisibilityObjects('node-input-objects_conditions')" onload="inputVisibilityObjects('node-input-objects_conditions')"> -->
-        <select type="text" id="node-input-objects_conditions" onchange="inputVisibilityObjects('node-input-objects_conditions')">
+        <select type="text" id="node-input-objects_conditions" onchange="inputVisibilityObjects(id)">
             <option value="copyDefault">--Select Object Condition--</option>
             <option value="setMatchETag">setMatchETag</option>
             <option value="setMatchETagExcept">setMatchETagExcept</option>
@@ -243,7 +235,6 @@
 </script>
 
 
-
 <!-- ====  NODE HELP INFORMATION  ==================================================================================== -->
 
 <script type="text/html" data-help-name="objects">
@@ -254,10 +245,12 @@
     set in the Edit Node dialogue.</p>
     <p>The object <b><i>Operation</i></b> can be passed in to the node by setting the appropriate incoming value of <code>msg.operation</code></p>
     
+    <hr>
+
     <h2>1. <i>getObject</i></h2>
     
     <h3>Description</h3>
-    <p>Creates a new bucket.</p>
+    <p>Downloads an object as a stream.</p>
     
     <h3>Parameters</h3>
     
@@ -265,17 +258,18 @@
         <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
 
         <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Name of the bucket to be created.</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket.</td></tr>
 
-        <tr><td valign="top"><i class="fa fa-globe">&#x202F;</i></td><td valign="top"><b>Region</b></td><td><b><code>region</code></b> ( <code>msg.region</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Region where the bucket is to be created. (optional)</td></tr>
+        <tr><td valign="top"><i class="fa fa-file">&#x202F;</i></td><td valign="top"><b>Object</b></td><td><b><code>objectName</code></b> ( <code>msg.objectName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the object.</td></tr>
 
     </table>
     
     <h3>Node Outputs</h3>
     <table>
         <tr>
-            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the bucket was created, e.g. <code>{"makeBucket":true}</code></td>
+            <!-- TO BE COMPLETED -->
+            <td valign="top"><B>Output</B></td><td valign="top">TBC</td>
         </tr>
         <tr>
             <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will be passed to the node's 'Error' output.</td>
@@ -288,12 +282,32 @@
     <h2>2. <i>getPartialObject</i></h2>
     
     <h3>Description</h3>
-    <p>List all buckets.</p>
+    <p>Downloads the specified range bytes of an object as a stream.</p>
+    
+    <h3>Parameters</h3>
+    
+    <table>
+        <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
+
+        <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-file">&#x202F;</i></td><td valign="top"><b>Object</b></td><td><b><code>objectName</code></b> ( <code>msg.objectName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the object.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-wrench">&#x202F;</i></td><td valign="top"><b>Offset</b></td><td><b><code>offset</code></b> ( <code>msg.offset</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Offset of the object from where the stream will start.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrows-h">&#x202F;</i></td><td valign="top"><b>Length</b></td><td><b><code>length</code></b> ( <code>msg.length</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Length of the object that will be read in the stream (optional, if not specified we read the rest of the file from the offset).</td></tr>
+
+    </table>
     
     <h3>Node Outputs</h3>
     <table>
         <tr>
-            <td valign="top"><B>Output</B></td><td valign="top">The node will output a JS object in the form <code>{"listBuckets":[...]}</code> containing an array of objects in the form <code>{"name":"bucketname","creationDate": "yyyy-mm-ddThh:mm:ss.sssZ"}</code> for each bucket.</td>
+            <!-- TO BE COMPLETED -->
+            <td valign="top"><B>Output</B></td><td valign="top">TBC</td>
         </tr>
         <tr>
             <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will be passed to the node's 'Error' output.</td>
@@ -306,7 +320,14 @@
     <h2>3. <i>putObject</i></h2>
     
     <h3>Description</h3>
-    <p>Checks if a bucket exists.</p>
+    <p>
+        Uploads an object from a stream/Buffer.
+    </p>
+    <p> 
+        The maximum size of a single object is limited to 5TB. 
+        putObject transparently uploads objects larger than 64MiB in multiple parts. 
+        Uploaded data is carefully verified using MD5SUM signatures.
+    </p>
     
     <h3>Parameters</h3>
     
@@ -314,14 +335,30 @@
         <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
 
         <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Name of the bucket to be checked.</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-file">&#x202F;</i></td><td valign="top"><b>Object</b></td><td><b><code>objectName</code></b> ( <code>msg.objectName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the object.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-wrench">&#x202F;</i></td><td valign="top"><b>Stream</b></td><td><b><code>stream</code></b> ( <code>msg.stream</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Readable stream.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrows-h">&#x202F;</i></td><td valign="top"><b>Size</b></td><td><b><code>size</code></b> ( <code>msg.size</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Size of the object (optional).</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrows-h">&#x202F;</i></td><td valign="top"><b>Meta Data</b></td><td><b><code>metaData</code></b> ( <code>msg.metaData</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Meta data of the object (optional).</td></tr>
 
     </table>
     
     <h3>Node Outputs</h3>
     <table>
         <tr>
-            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the bucket exists, e.g. <code>{"bucketExists":true}</code></td>
+            <td valign="top"><B>Output</B></td><td valign="top">
+                The node will output confirmation, in the form of a JS object, 
+                as to whether or not the object PUT operation was successful, 
+                including (if appropriate) the etag reference of the object, , e.g. <code>{"bucketExists":true, "etag":etagstring}</code>
+            </td>
         </tr>
         <tr>
             <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will be passed to the node's 'Error' output.</td>
@@ -334,7 +371,7 @@
     <h2>4. <i>copyObject</i></h2>
     
     <h3>Description</h3>
-    <p>Removes a bucket.</p>
+    <p>Copy a source object into a new object in the specified bucket.</p>
     
     <h3>Parameters</h3>
     
@@ -342,14 +379,38 @@
         <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
 
         <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Name of the bucket to be removed.</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-file">&#x202F;</i></td><td valign="top"><b>Object</b></td><td><b><code>objectName</code></b> ( <code>msg.objectName</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Name of the object.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-wrench">&#x202F;</i></td><td valign="top"><b>sourceObject</b></td><td><b><code>stream</code></b> ( <code>msg.sourceObject</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Path of the file to be copied, in the format <code>bucketname/objectname</code></td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrows-h">&#x202F;</i></td><td valign="top"><b>Conditions</b></td><td><b><code>size</code></b> ( <code>msg.size</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Conditions to be satisfied before allowing object copy.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrows-h">&#x202F;</i></td><td valign="top"><b>ETag</b></td><td><b><code>setMatchEtag</code></b> ( <code>msg.setMatchEtag</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Conditions to be satisfied before allowing object copy.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrows-h">&#x202F;</i></td><td valign="top"><b>Except ETag</b></td><td><b><code>setMatchEtagExcept</code></b> ( <code>msg.setMatchEtagExcept</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Conditions to be satisfied before allowing object copy.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrows-h">&#x202F;</i></td><td valign="top"><b>Modified</b></td><td><b><code>setModified</code></b> ( <code>msg.setModified</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Conditions to be satisfied before allowing object copy.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrows-h">&#x202F;</i></td><td valign="top"><b>MetaData</b></td><td><b><code>setReplaceMetadataDirective</code></b> ( <code>msg.setReplaceMetadataDirective</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Conditions to be satisfied before allowing object copy.</td></tr>
+
+        <tr><td valign="top"><i class="fa fa-arrows-h">&#x202F;</i></td><td valign="top"><b>Unmodified</b></td><td><b><code>setUnmodified</code></b> ( <code>msg.setUnmodified</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Conditions to be satisfied before allowing object copy.</td></tr>
 
     </table>
     
     <h3>Node Outputs</h3>
     <table>
         <tr>
-            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the bucket has been removed, e.g. <code>{"removeBucket":true}</code></td>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the object has been copied, e.g. <code>{"removeBucket":true}</code></td>
         </tr>
         <tr>
             <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will be passed to the node's 'Error' output.</td>
@@ -493,19 +554,6 @@
     
     <hr>
 
+    <p>Copyright © 2020 Colin Payne</p>
+
 </script>
-
-
-<!-- <script type="text/javascript">
-
-    let selectedOperation = document.getElementById('node-input-objects_operation').value;
-    let selectectedOpOrCond = '';
-    if ( selectedOperation == 'copyObject' ) {
-        selectectedOpOrCond = 'node-input-objects_conditions'
-    } else {
-        selectectedOpOrCond = 'node-input-objects_operation'
-    };
-    console.log(selectectedOpOrCond);
-    window.onload = inputVisibilityObjects(selectectedOpOrCond);
-
-</script> -->
