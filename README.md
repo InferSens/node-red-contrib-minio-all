@@ -6,11 +6,27 @@ This node utilises the MinIO JavaScript API (please see https://docs.min.io/docs
 **Please Note:**
 This set of nodes (and associated support information) is a work in progress.
 
+## MinIO Operations ##
+
+Bucket | File Object | Object | Presigned | Bucket Notification | Bucket Policy
+------ | ----------- | ------ | --------- | ------------------- | -------------
+[makeBucket](#1.-makebucket) | [fGetObject](#1.-fgetobject) | [getObject](#1.-getobject) | [presignedUrl](#1.-presignedurl) | [getBucketNotification](#1.-getbucketnotification) | [getBucketPolicy](#1.-getbucketpolicy)
+[listBuckets](#2.-listbuckets) | [fPutObject](#2.-fputobject) | [getPartialObject](#2.-getpartialobject) | [presignedGetObject](#2.-presignedgetobject) | [setBucketNotification](#2.-setbucketnotification) | [setBucketPolicy](#2.-setbucketpolicy)
+[bucketExists](#3.-bucketexists) |   | [putObject](#3.-putobject) | [presignedPutObject](#3.-presignedputobject) | [removeAllBucketNotification](#3.-removeallbucketnotification) |  
+[removeBucket](#4.-removebucket) |   | [copyObject](#4.-copyobject) | [presignedPostPolicy](#4.-presignedpostpolicy) | [listenBucketNotification](#4.-listenbucketnotification) |  
+[listObjects](#5.-listobjects) |   | [statObject](#5.-statobject) |   |   |  
+[listObjectsV2](#6.-listobjectsv2) |   | [removeObject](#6.-removeobject) |   |   |  
+[listObjectsV2WithMetadata](#7.-listobjectsv2withmetadata) |   | [removeObjects](#7.-removeobjects) |   |   |  
+[listIncompleteUploads](#8.-listincompleteuploads) |   | [removeIncompleteUpload](#8.-removeincompleteupload) |   |   |  
+
+
 ### Passing in parameters ###
 For each operation, parameters can either be set in the Edit Node dialogue, or passed in to the node via the node input. Parameters passed in will override any parameters 
 set in the Edit Node dialogue.
 
 The ***Operation*** in each case can be passed in to the node by setting the appropriate incoming value of `msg.operation`
+
+
 
 # Bucket Operations #
 
@@ -270,21 +286,22 @@ Name | Description
 Copy a source object into a new object in the specified bucket.
 
 ### Parameters ###
-Name | Parameter | Description
----- | --------- | -----------
-**Bucket** | **`bucketName`** (`msg.bucketName` | Name of the bucket.
-**Object** | **`objectName`** (`msg.objectName` | Name of the object.
+Name             | Parameter | Description
+---------------- | --------- | -----------
+**Bucket**       | **`bucketName`** (`msg.bucketName` | Name of the bucket.
+**Object**       | **`objectName`** (`msg.objectName` | Name of the object.
 **sourceObject** | **`stream`** (`msg.sourceObject` | Path of the file to be copied, in the format `bucketname/objectname`
-**Conditions** | **`size`** (`msg.size` | Conditions to be satisfied before allowing object copy.
-**ETag** | **`setMatchEtag`** (`msg.setMatchEtag` | Conditions to be satisfied before allowing object copy.
-**Except ETag** | **`setMatchEtagExcept`** (`msg.setMatchEtagExcept` | Conditions to be satisfied before allowing object copy.
-**Modified** | **`setModified`** (`msg.setModified` | Conditions to be satisfied before allowing object copy.
-**MetaData** | **`setReplaceMetadataDirective`** (`msg.setReplaceMetadataDirective` | Conditions to be satisfied before allowing object copy.
-**Unmodified** | **`setUnmodified`** (`msg.setUnmodified` | Conditions to be satisfied before allowing object copy.
+**Conditions**   | **`size`** (`msg.size` | Conditions to be satisfied before allowing object copy.
+**ETag**         | **`setMatchEtag`** (`msg.setMatchEtag` | Conditions to be satisfied before allowing object copy.
+**Except ETag**  | **`setMatchEtagExcept`** (`msg.setMatchEtagExcept` | Conditions to be satisfied before allowing object copy.
+**Modified**     | **`setModified`** (`msg.setModified` | Conditions to be satisfied before allowing object copy.
+**MetaData**     | **`setReplaceMetadataDirective`** (`msg.setReplaceMetadataDirective` | Conditions to be satisfied before allowing object copy.
+**Unmodified**   | **`setUnmodified`** (`msg.setUnmodified` | Conditions to be satisfied before allowing object copy.
+
 
 ### Node Outputs ###
-Name | Description
----- | ----------- 
+Name       | Description
+---------- | ----------- 
 **Output** | The node will output confirmation, in the form of a JS object, as to whether or not the object has been copied, e.g. `{"removeBucket":true}`
 **Error**  | Any errors received in response to the request will be passed to the node's 'Error' output.
 
@@ -444,7 +461,8 @@ Name | Parameter | Description
 **Key** | **`policy.setKey`** (`msg.policy.setKey`) | Policy restricting object Key for upload (optional).
 **Key Prefix** | **`policy.setKeyStartsWith`** (`msg.policy.setKeyStartsWith`) | Policy restricting object Key prefix for upload (optional).
 **Expiry** | **`policy.setExpires`** (`msg.policy.setExpires`) | Expiry time of the policy, in seconds (optional).
-**Type** | **`policy.setContentType`** (`msg.policy.setContentType`) | Policy restricting content type for upload, e.g. `text/plain` (optional).**Size: From** | **`policy.setContentLengthRange`** (`msg.policy.setContentLengthRange.from`) | The lower end of the range of content length for the upload, in bytes, e.g. `1024` (optional).
+**Type** | **`policy.setContentType`** (`msg.policy.setContentType`) | Policy restricting content type for upload, e.g. `text/plain` (optional).
+**Size: From** | **`policy.setContentLengthRange`** (`msg.policy.setContentLengthRange.from`) | The lower end of the range of content length for the upload, in bytes, e.g. `1024` (optional).
 **Size: To** | **`policy.setContentLengthRange`** (`msg.policy.setContentLengthRange.to`) | The upper end of the range of content length for the upload, in bytes, e.g. `1024*1024` (optional).
 
 ### Node Outputs ###
