@@ -75,6 +75,7 @@ module.exports = function(RED) {
                         }
                     })
                     break;
+
                 // ====  LIST BUCKETS  ===========================================
                 case "listBuckets":
                     helpers.statusUpdate(node, "blue", "dot", 'Listing Buckets');
@@ -90,6 +91,7 @@ module.exports = function(RED) {
                         }
                     })
                     break;
+
                 // ====  BUCKET EXISTS  ===========================================
                 case "bucketExists":
                     helpers.statusUpdate(node, "blue", "dot", 'Checking if "' + opParams.bucketName + '" exists');
@@ -109,6 +111,7 @@ module.exports = function(RED) {
                         }
                     })                    
                     break;
+
                 // ====  REMOVE BUCKET  ===========================================
                 case "removeBucket":
                     helpers.statusUpdate(node, "blue", "dot", 'Removing "' + opParams.bucketName + '" bucket');
@@ -124,6 +127,7 @@ module.exports = function(RED) {
                         };
                     })
                     break;
+
                 // ====  LIST OBJECTS  ===========================================
                 case "listObjects":
                     helpers.statusUpdate(node, "blue", "dot", 'Listing objects');
@@ -142,6 +146,7 @@ module.exports = function(RED) {
                         node.error = null;
                     });
                     break;
+
                 // ====  LIST OBJECTS V2  ===========================================
                 case "listObjectsV2":
                     helpers.statusUpdate(node, "blue", "dot", 'Listing Objects');
@@ -160,6 +165,7 @@ module.exports = function(RED) {
                         node.error = null;
                     });
                     break;
+
                 // ====  LIST OBJECTS V2 WITH META DATA  ===========================================
                 case "listObjectsV2WithMetadata":
                     helpers.statusUpdate(node, "blue", "dot", 'Listing Objects');
@@ -178,6 +184,7 @@ module.exports = function(RED) {
                         node.error = null;
                     });
                     break;
+
                 // ====  LIST INCOMPLETE UPLOADS  ===========================================
                 case "listIncompleteUploads":
                     helpers.statusUpdate(node, "blue", "dot", 'Listing Incomplete Uploads');
@@ -196,6 +203,7 @@ module.exports = function(RED) {
                         node.error = null;
                     });
                     break;
+
                 // ====  DEFAULT - INCORRECT SELECTION   ===========================================
                 case "default":
                     node.error = 'Invalid Bucket Operation Selection'

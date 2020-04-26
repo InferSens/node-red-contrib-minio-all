@@ -100,7 +100,6 @@
             [ 2048, "policy.setContentLengthRange.from" ],
             [ 4096, "policy.setContentLengthRange.to" ]
         ]
-        // let elementId;
 
         for (elementId of elementIds) {
             let isVisible = false;
@@ -163,10 +162,6 @@
         <label for="node-input-presigned_issue"><i class="fa fa-calendar"></i> Issue Date</label>
         <input type="text" id="node-input-presigned_issue" placeholder="Date when the URL will be issued (optional)">
     </div>
-    <!-- <div class="form-row" id="policy" style="display: none">
-        <label for="node-input-presigned_policy"><i class="fa fa-calendar"></i> Policy</label>
-        <input type="text" id="node-input-presigned_policy" placeholder="Date when the URL will be issued (optional)">
-    </div> -->
     <div class="form-row" id="policy.setBucket" style="display: none">
         <label for="node-input-presigned_policy_bucket"><i class="fa fa-database"></i> Bucket</label>
         <input type="text" id="node-input-presigned_policy_bucket" placeholder="Policy: Bucket">
@@ -392,25 +387,25 @@
         <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
 
         <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>policy.setBucket</code></b> ( <code>msg.policy.setBucket</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Policy restricting bucket for upload.</td></tr>
+        <tr><td> </td><td colspan=2>Policy restricting bucket for upload (optional).</td></tr>
 
         <tr><td valign="top"><i class="fa fa-file">&#x202F;</i></td><td valign="top"><b>Key</b></td><td><b><code>policy.setKey</code></b> ( <code>msg.policy.setKey</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Policy restricting object Key for upload.</td></tr>
+        <tr><td> </td><td colspan=2>Policy restricting object Key for upload (optional).</td></tr>
 
         <tr><td valign="top"><i class="fa fa-step-backward">&#x202F;</i></td><td valign="top"><b>Key Prefix</b></td><td><b><code>policy.setKeyStartsWith</code></b> ( <code>msg.policy.setKeyStartsWith</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Policy restricting object Key prefix for upload.</td></tr>
+        <tr><td> </td><td colspan=2>Policy restricting object Key prefix for upload (optional).</td></tr>
 
         <tr><td valign="top"><i class="fa fa-clock-o">&#x202F;</i></td><td valign="top"><b>Expiry</b></td><td><b><code>policy.setExpires</code></b> ( <code>msg.policy.setExpires</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Policy restricting object Key prefix for upload.</td></tr>
+        <tr><td> </td><td colspan=2>Expiry time of the policy, in seconds (optional).</td></tr>
 
         <tr><td valign="top"><i class="fa fa-code">&#x202F;</i></td><td valign="top"><b>Type</b></td><td><b><code>policy.setContentType</code></b> ( <code>msg.policy.setContentType</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Policy restricting object Key prefix for upload.</td></tr>
+        <tr><td> </td><td colspan=2>Policy restricting content type for upload, e.g. <code>text/plain</code> (optional).</td></tr>
 
         <tr><td valign="top"><i class="fa fa-long-arrow-left">&#x202F;</i></td><td valign="top"><b>Size: From</b></td><td><b><code>policy.setContentLengthRange</code></b> ( <code>msg.policy.setContentLengthRange.from</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Policy restricting object Key prefix for upload.</td></tr>
+        <tr><td> </td><td colspan=2>The lower end of the range of content length for the upload, in bytes, e.g. <code>1024</code> (optional).</td></tr>
 
         <tr><td valign="top"><i class="fa fa-long-arrow-right">&#x202F;</i></td><td valign="top"><b>Size: To</b></td><td><b><code>policy.setContentLengthRange</code></b> ( <code>msg.policy.setContentLengthRange.to</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Policy restricting object Key prefix for upload.</td></tr>
+        <tr><td> </td><td colspan=2>The upper end of the range of content length for the upload, in bytes, e.g. <code>1024*1024</code> (optional).</td></tr>
     </table>
     
     <h3>Node Outputs</h3>
@@ -420,8 +415,8 @@
                 <B>Output</B>
             </td>
             <td valign="top">
-                If successful, the node will output a JS object, containing the  
-                presigned URL policy, e.g. <code>{ "presignedPostPolicy": policydetails }</code>
+                If successful, the node will output a JS object, containing the  details of the 
+                submitted policy, e.g. <code>{ "presignedPostPolicy": { "postURL": url, "formData": {...} } }</code>
             </td>
         </tr>
         <tr>

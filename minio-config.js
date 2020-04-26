@@ -16,14 +16,15 @@
 
 var Minio = require('minio');
 
+const helpers = require('./helpers');
+
 module.exports = function(RED) {
 
-    function setMinioStatus(node, minioStatus) {
-        node.minioStatus = minioStatus;
-        // console.log('minioStatus', minioStatus)
-        // Pass the new status to all the available listeners
-        node.emit('minio_status', minioStatus);
-    }
+    // function setMinioStatus(node, minioStatus) {
+    //     node.minioStatus = minioStatus;
+    //     // Pass the new status to all the available listeners
+    //     node.emit('minio_status', minioStatus);
+    // }
 
     function MinioConfigNode(config) {
 
@@ -38,14 +39,12 @@ module.exports = function(RED) {
         // Prevents a limit being placed on number of event listeners (otherwise max of 10 by default):
         node.setMaxListeners(0);
 
-        setMinioStatus(node, "disconnected");
+        // setMinioStatus(node, "disconnected");
 
         node.initialize = function() {
 
             try {
-                setMinioStatus(node, "connecting");
-
-                // console.log("trying to connect!");
+                // setMinioStatus(node, "connecting");
 
                 this.minioClient = new Minio.Client({
                     endPoint: this.host,
@@ -55,17 +54,18 @@ module.exports = function(RED) {
                     secretKey: this.credentials.secretKey
                 });
     
-                setMinioStatus(node, "connected");
+                // setMinioStatus(node, "connected");
     
                 return this.minioClient;    
             }
             catch(err) {
-                setMinioStatus(node, err);
+                // setMinioStatus(node, err);
+                console.log(err);
             }
         }
 
         node.on('close', function(){
-			setMinioStatus(node, "");
+			// setMinioStatus(node, "");
             node.removeAllListeners("minio_status");
 		});
     }

@@ -28,8 +28,6 @@ module.exports = function(RED) {
         this.req_params     = config.presigned_req_params;
         this.resp_headers   = config.presigned_resp_headers;
         this.issue          = config.presigned_issue;
-        // this.policy         = config.presigned_policy;
-        // this.policy         = {};
         this.policy_bucket                    = config.presigned_policy_bucket;
         this.policy_key                       = config.presigned_policy_key;
         this.policy_key_prefix                = config.presigned_policy_key_prefix;
@@ -110,6 +108,7 @@ module.exports = function(RED) {
                             helpers.statusUpdate(node, "green", "dot", 'Fetched presignedURL', 5000);
                         }
                         node.output = { 'presignedURL': presignedUrl };
+                        console.log('presignedUrl:',presignedUrl,'\nError:',err);
                     })
                     break;
 
@@ -207,9 +206,7 @@ module.exports = function(RED) {
 
             // Waits until response received from host before sending to node output(s)
             var timerId = setTimeout(function check() {
-                if ( !node.output && !node.error ) {
-                    timerId = setTimeout(check, 50); 
-                } else {
+                if ( !node.output ) { timerId = setTimeout(check, 50); } else {
                     node.send([ { 'payload': node.output } , { 'payload': node.error } ]);
                 }
             }, 50);
