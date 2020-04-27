@@ -8,16 +8,16 @@ This set of nodes (and associated support information) is a work in progress.
 
 ## MinIO Operations ##
 
-[Bucket Operations](#bucket-operations) | [File Object Operations](#file-object-operations) | [Object Operations](#object-operations) 
-:---------------------------- | :-------------------------------------- | :----------------------------
-[makeBucket](#1-makebucket) | [fGetObject](#1-fgetobject) | [getObject](#1-getobject)
-[listBuckets](#2-listbuckets) | [fPutObject](#2-fputobject) | [getPartialObject](#2-getpartialobject)
-[bucketExists](#3-bucketexists) |   | [putObject](#3-putobject) | [presignedPutObject](#3-presignedputobject)
-[removeBucket](#4-removebucket) |   | [copyObject](#4-copyobject) | [presignedPostPolicy](#4-presignedpostpolicy)
-[listObjects](#5-listobjects) |   | [statObject](#5-statobject)
-[listObjectsV2](#6-listobjectsv2) |   | [removeObject](#6-removeobject)
-[listObjectsV2WithMetadata](#7-listobjectsv2withmetadata) |   | [removeObjects](#7-removeobjects)
-[listIncompleteUploads](#8-listincompleteuploads) |   | [removeIncompleteUpload](#8-removeincompleteupload)
+[Bucket Operations](#bucket-operations)                   | [File Object Operations](#file-object-operations) | [Object Operations](#object-operations) 
+:-------------------------------------------------------- | :------------------------------------------------ | :----------------------------
+[makeBucket](#1-makebucket)                               | [fGetObject](#1-fgetobject)                       | [getObject](#1-getobject)
+[listBuckets](#2-listbuckets)                             | [fPutObject](#2-fputobject)                       | [getPartialObject](#2-getpartialobject)
+[bucketExists](#3-bucketexists)                           |                                                   | [putObject](#3-putobject)
+[removeBucket](#4-removebucket)                           |                                                   | [copyObject](#4-copyobject)
+[listObjects](#5-listobjects)                             |                                                   | [statObject](#5-statobject)
+[listObjectsV2](#6-listobjectsv2)                         |                                                   | [removeObject](#6-removeobject)
+[listObjectsV2WithMetadata](#7-listobjectsv2withmetadata) |                                                   | [removeObjects](#7-removeobjects)
+[listIncompleteUploads](#8-listincompleteuploads)         |                                                   | [removeIncompleteUpload](#8-removeincompleteupload)
   |  |  
   |  |  
 **[Presigned Operations](#presigned-operations)** | **[Bucket Notification Operations](#bucket-notification-operations)** | **[Bucket Policy Operations](#bucket-policy-operations)**
