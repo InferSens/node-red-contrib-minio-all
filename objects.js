@@ -64,20 +64,20 @@ module.exports = function(RED) {
         // TRIGGER ON INCOMING MESSAGE
         node.on('input', function(msg) {
             // If values are provided in the incoming message, then they override those set in the node configuration
-            node.operation        = (msg.operation) ? msg.operation : node.operation;
-            opParams.bucketName   = (msg.bucketName) ? msg.bucketName : opParams.bucketName;
-            opParams.objectName   = (msg.objectName) ? msg.objectName : opParams.objectName;
-            opParams.offset       = (msg.offset) ? msg.offset : opParams.offset;
-            opParams.length       = (msg.length) ? msg.length : opParams.length;
-            opParams.stream       = (msg.stream) ? msg.stream : opParams.stream;
-            opParams.size         = (msg.size) ? msg.size : opParams.size;
-            opParams.metaData     = (msg.metaData) ? msg.metaData : opParams.metaData;
+            node.operation        = (msg.operation)    ? msg.operation    : node.operation;
+            opParams.bucketName   = (msg.bucketName)   ? msg.bucketName   : opParams.bucketName;
+            opParams.objectName   = (msg.objectName)   ? msg.objectName   : opParams.objectName;
+            opParams.offset       = (msg.offset)       ? msg.offset       : opParams.offset;
+            opParams.length       = (msg.length)       ? msg.length       : opParams.length;
+            opParams.stream       = (msg.stream)       ? msg.stream       : opParams.stream;
+            opParams.size         = (msg.size)         ? msg.size         : opParams.size;
+            opParams.metaData     = (msg.metaData)     ? msg.metaData     : opParams.metaData;
             opParams.sourceObject = (msg.sourceObject) ? msg.sourceObject : opParams.sourceObject;
-            opParams.conditions   = (msg.conditions) ? msg.conditions : opParams.conditions;
-            opParams.objectsList  = (msg.objectsList) ? msg.objectsList : opParams.objectsList;
-            opParams.prefix       = (msg.prefix) ? msg.prefix : opParams.prefix;
-            opParams.etag         = (msg.etag) ? msg.etag : opParams.etag;
-            opParams.dateTime     = (msg.dateTime) ? msg.dateTime : opParams.dateTime;
+            opParams.conditions   = (msg.conditions)   ? msg.conditions   : opParams.conditions;
+            opParams.objectsList  = (msg.objectsList)  ? msg.objectsList  : opParams.objectsList;
+            opParams.prefix       = (msg.prefix)       ? msg.prefix       : opParams.prefix;
+            opParams.etag         = (msg.etag)         ? msg.etag         : opParams.etag;
+            opParams.dateTime     = (msg.dateTime)     ? msg.dateTime     : opParams.dateTime;
             
             // Trigger Bucket Operation type based on "operation" selected in node configuration
             switch (node.operation) {                
@@ -88,6 +88,7 @@ module.exports = function(RED) {
                     var size = 0
                     minioClient.getObject(opParams.bucketName, opParams.objectName, function(err, dataStream) {
                         if (err) {
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             node.error = err;
                             node.output  = {
                                 'getObject': false,
@@ -111,6 +112,7 @@ module.exports = function(RED) {
                     var size = 0
                     minioClient.getPartialObject(opParams.bucketName, opParams.objectName, opParams.offset, opParams.length, function(err, dataStream) {
                         if (err) {
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             return console.log(err)
                         }
                         dataStream.on('data', function(chunk) {
@@ -129,6 +131,7 @@ module.exports = function(RED) {
                 case "putObject":
                     minioClient.putObject(opParams.bucketName, opParams.objectName, opParams.stream, function(err, etag) {
                         if (err) {
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             node.error = err;
                             node.output  = { 'putObject': false };
                         } else {
@@ -175,6 +178,7 @@ module.exports = function(RED) {
 
                     minioClient.copyObject(opParams.bucketName, opParams.objectName, opParams.sourceObject, conds, function(err, data) {
                         if (err) {
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             node.error = err;
                             node.output  = { 'copyObject': false };
                         } else {
@@ -192,6 +196,7 @@ module.exports = function(RED) {
                 case "statObject":
                     minioClient.statObject(opParams.bucketName, opParams.objectName, function(err, stat) {
                         if (err) {
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             node.error = err;
                             node.output  = { 'statObject': false };
                         } else {
@@ -208,6 +213,7 @@ module.exports = function(RED) {
                 case "removeObject":
                     minioClient.removeObject(opParams.bucketName, opParams.objectName, function(err) {
                         if (err) {
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             node.error = err;
                             node.output  = { 'removeObject': false };
                         } else {
@@ -222,6 +228,7 @@ module.exports = function(RED) {
                     if (opParams.objectsList) {
                         minioClient.removeObjects(opParams.bucketName,JSON.parse(opParams.objectsList), function(err) {
                             if (err) {
+                                helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                                 node.error = err;
                                 node.output  = { 'removeObjects': false };
                             } else {
@@ -245,6 +252,7 @@ module.exports = function(RED) {
                         objectsStream.on('end', function() {
                             minioClient.removeObjects(opParams.bucketName,objectsList, function(err) {
                                 if (err) {
+                                    helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                                     node.error = err;
                                     node.output  = { 'removeObjects': false };
                                 } else {
@@ -262,6 +270,7 @@ module.exports = function(RED) {
                     // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
                     minioClient.removeIncompleteUpload(opParams.bucketName, opParams.objectName, function(err) {
                         if (err) {
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             return console.log('Unable to remove incomplete object', err)
                         }
                         console.log('Incomplete object removed successfully.')

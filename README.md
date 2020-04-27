@@ -36,13 +36,13 @@ Creates a new bucket.
 
 ### Parameters ###
 Name       | Parameter (`passed in as`)      | Description
----------- | ------------------------------- | -----------
+:--------- | :------------------------------ | :----------
 **Bucket** | `bucketName` (`msg.bucketName`) | Name of the bucket to be created
 **Region** | `region` (`msg.region`)         | Region where the bucket is to be created. (optional)
 
 ### Node Outputs ###
 Name       | Description
----------- | -----------
+:--------- | :----------
 **Output** | The node will output confirmation, in the form of a JS object, as to whether or not the bucket was created, e.g. `{"makeBucket":true}`
 **Error**  | Any errors received in response to the request will be passed to the node's 'Error' output.
 
@@ -301,7 +301,7 @@ Name             | Parameter (`passed in as`)                                   
 ### Node Outputs ###
 Name       | Description
 ---------- | ----------- 
-**Output** | The node will output confirmation, in the form of a JS object, as to whether or not the object has been copied, e.g. `{"removeBucket":true}`
+**Output** | The node will output confirmation, in the form of a JS object, as to whether or not the object has been copied, e.g. `{"copyObject":true}`
 **Error**  | Any errors received in response to the request will be passed to the node's 'Error' output.
 
 
