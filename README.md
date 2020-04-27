@@ -8,16 +8,23 @@ This set of nodes (and associated support information) is a work in progress.
 
 ## MinIO Operations ##
 
-[Bucket](#bucket-operations) | [File Object](#file-object-operations) | [Object](#object-operations) | [Presigned](#presigned-operations) | [Bucket Notification](#bucket-notification-operations) | [Bucket Policy](#bucket-policy-operations)
-:---------------------------- | :-------------------------------------- | :---------------------------- | :---------------------------------- | :------------------ | :------------
-[makeBucket](#1-makebucket) | [fGetObject](#1-fgetobject) | [getObject](#1-getobject) | [presignedUrl](#1-presignedurl) | [getBucketNotification](#1-getbucketnotification) | [getBucketPolicy](#1-getbucketpolicy)
-[listBuckets](#2-listbuckets) | [fPutObject](#2-fputobject) | [getPartialObject](#2-getpartialobject) | [presignedGetObject](#2-presignedgetobject) | [setBucketNotification](#2-setbucketnotification) | [setBucketPolicy](#2-setbucketpolicy)
-[bucketExists](#3-bucketexists) |   | [putObject](#3-putobject) | [presignedPutObject](#3-presignedputobject) | [removeAllBucketNotification](#3-removeallbucketnotification) |  
-[removeBucket](#4-removebucket) |   | [copyObject](#4-copyobject) | [presignedPostPolicy](#4-presignedpostpolicy) | [listenBucketNotification](#4-listenbucketnotification) |  
-[listObjects](#5-listobjects) |   | [statObject](#5-statobject) |   |   |  
-[listObjectsV2](#6-listobjectsv2) |   | [removeObject](#6-removeobject) |   |   |  
-[listObjectsV2WithMetadata](#7-listobjectsv2withmetadata) |   | [removeObjects](#7-removeobjects) |   |   |  
-[listIncompleteUploads](#8-listincompleteuploads) |   | [removeIncompleteUpload](#8-removeincompleteupload) |   |   |  
+[Bucket Operations](#bucket-operations) | [File Object Operations](#file-object-operations) | [Object Operations](#object-operations) 
+:---------------------------- | :-------------------------------------- | :----------------------------
+[makeBucket](#1-makebucket) | [fGetObject](#1-fgetobject) | [getObject](#1-getobject)
+[listBuckets](#2-listbuckets) | [fPutObject](#2-fputobject) | [getPartialObject](#2-getpartialobject)
+[bucketExists](#3-bucketexists) |   | [putObject](#3-putobject) | [presignedPutObject](#3-presignedputobject)
+[removeBucket](#4-removebucket) |   | [copyObject](#4-copyobject) | [presignedPostPolicy](#4-presignedpostpolicy)
+[listObjects](#5-listobjects) |   | [statObject](#5-statobject)
+[listObjectsV2](#6-listobjectsv2) |   | [removeObject](#6-removeobject)
+[listObjectsV2WithMetadata](#7-listobjectsv2withmetadata) |   | [removeObjects](#7-removeobjects)
+[listIncompleteUploads](#8-listincompleteuploads) |   | [removeIncompleteUpload](#8-removeincompleteupload)
+  |  |  
+  |  |  
+**[Presigned Operations](#presigned-operations)** | **[Bucket Notification Operations](#bucket-notification-operations)** | **[Bucket Policy Operations](#bucket-policy-operations)**
+[presignedUrl](#1-presignedurl) | [getBucketNotification](#1-getbucketnotification) | [getBucketPolicy](#1-getbucketpolicy)
+[presignedGetObject](#2-presignedgetobject) | [setBucketNotification](#2-setbucketnotification) | [setBucketPolicy](#2-setbucketpolicy)
+[presignedPutObject](#3-presignedputobject) | [removeAllBucketNotification](#3-removeallbucketnotification) |  
+[presignedPostPolicy](#4-presignedpostpolicy) | [listenBucketNotification](#4-listenbucketnotification) |  
 
 
 ### Passing in parameters ###
@@ -285,14 +292,14 @@ Name       | Description
 Copy a source object into a new object in the specified bucket.
 
 ### Parameters ###
-Name             | Parameter<br>(`passed in as`)                                      | Description
-:--------------- | :-------------------------------------------------------------- | :----------
-![bucket]**Bucket**       | `bucketName`<br>(`msg.bucketName`)                                   | Name of the bucket.
-![file]**Object**       | `objectName`<br>(`msg.objectName`)                                   | Name of the object.
-![sourceObject]**Source** | `sourceObject`<br>(`msg.sourceObject`)                                     | Path of the file to be copied, in the format `bucketname/objectname`
-![size]**Size**   | `size`<br>(`msg.size`)                                               | Conditions to be satisfied before allowing object copy.
-![tag]**ETag**         | `setMatchEtag`<br>(`msg.setMatchEtag`)                               | Conditions to be satisfied before allowing object copy.
-![tag]**Except ETag**  | `setMatchEtagExcept`<br>(`msg.setMatchEtagExcept`)                   | Conditions to be satisfied before allowing object copy.
+Name                        | Parameter<br>(`passed in as`)                                        | Description
+:-------------------------- | :------------------------------------------------------------------- | :----------
+![bucket]**Bucket**         | `bucketName`<br>(`msg.bucketName`)                                   | Name of the bucket.
+![file]**Object**           | `objectName`<br>(`msg.objectName`)                                   | Name of the object.
+![sourceObject]**Source**   | `sourceObject`<br>(`msg.sourceObject`)                                     | Path of the file to be copied, in the format `bucketname/objectname`
+![size]**Size**             | `size`<br>(`msg.size`)                                               | Conditions to be satisfied before allowing object copy.
+![tag]**ETag**              | `setMatchEtag`<br>(`msg.setMatchEtag`)                               | Conditions to be satisfied before allowing object copy.
+![tag]**Except ETag**       | `setMatchEtagExcept`<br>(`msg.setMatchEtagExcept`)                   | Conditions to be satisfied before allowing object copy.
 ![calendar]**Modified**     | `setModified`<br>(`msg.setModified`)                                 | Conditions to be satisfied before allowing object copy.
 ![metaData]**MetaData**     | `setReplaceMetadataDirective`<br>(`msg.setReplaceMetadataDirective`) | Conditions to be satisfied before allowing object copy.
 ![calendar]**Unmodified**   | `setUnmodified`<br>(`msg.setUnmodified`)                             | Conditions to be satisfied before allowing object copy.
@@ -310,10 +317,10 @@ Name       | Description
 Lists all objects in a bucket.
 
 ### Parameters ###
-Name          | Parameter<br>(`passed in as`)    | Description
-:------------ | :---------------------------- | :----------
-![bucket]**Bucket**    | `bucketName`<br>(`msg.bucketName`) | Name of the bucket for which the objects listing is required.
-![prefix]**Prefix**    | `prefix`<br>(`msg.prefix`)         | The prefix of the objects that should be listed. (optional).
+Name                      | Parameter<br>(`passed in as`)      | Description
+:------------------------ | :--------------------------------- | :----------
+![bucket]**Bucket**       | `bucketName`<br>(`msg.bucketName`) | Name of the bucket for which the objects listing is required.
+![prefix]**Prefix**       | `prefix`<br>(`msg.prefix`)         | The prefix of the objects that should be listed. (optional).
 ![recursive]**Recursive** | `recursive`<br>(`msg.recursive`)   | `true` indicates recursive style listing and `false` indicates directory style listing delimited by '/'. (optional, default `false`).
 
 ### Node Outputs ###
@@ -328,11 +335,11 @@ Name       | Description
 Lists all objects in a bucket using S3 listing objects V2 API.
 
 ### Parameters ###
-Name            | Parameter<br>(`passed in as`)    | Description
-:-------------- | :---------------------------- | :----------
-![bucket]**Bucket**      | `bucketName`<br>(`msg.bucketName`) | Name of the bucket for which the objects listing is required.
-![prefix]**Prefix**      | `prefix`<br>(`msg.prefix`)         | The prefix of the objects that should be listed. (optional).
-![recursive]**Recursive**   | `recursive`<br>(`msg.recursive`)   | `true` indicates recursive style listing and `false` indicates directory style listing delimited by '/'. (optional, default `false`).
+Name                         | Parameter<br>(`passed in as`)      | Description
+:--------------------------- | :--------------------------------- | :----------
+![bucket]**Bucket**          | `bucketName`<br>(`msg.bucketName`) | Name of the bucket for which the objects listing is required.
+![prefix]**Prefix**          | `prefix`<br>(`msg.prefix`)         | The prefix of the objects that should be listed. (optional).
+![recursive]**Recursive**    | `recursive`<br>(`msg.recursive`)   | `true` indicates recursive style listing and `false` indicates directory style listing delimited by '/'. (optional, default `false`).
 ![startAfter]**Start After** | `startAfter`<br>(`msg.startAfter`) | Specifies the object name to start after, when listing objects in a bucket. (optional).
 
 ### Node Outputs ###
@@ -347,8 +354,8 @@ Name       | Description
 Removes all objects in a specified bucket matching an optional prefix value, or a defined list of object names.
 
 ### Parameters ###
-Name                      | Parameter<br>(`passed in as`)      | Description
-:------------------------ | :------------------------------ | :----------
+Name                      | Parameter<br>(`passed in as`)        | Description
+:------------------------ | :----------------------------------- | :----------
 ![bucket]**Bucket**       | `bucketName`<br>(`msg.bucketName`)   | Name of the bucket.
 ![list]**Objects List**   | `objectsList`<br>(`msg.objectsList`) | Explicit list of objects in the bucket to be removed (Optional). Should be provided as an array of object names, e.g. `[ "object_01", "object_02", "object_03" ]`. If left blank, then all objects in the specified bucket will be removed (subject to any value specified in the prefix field).
 ![prefix]**Prefix**       | `prefix`<br>(`msg.prefix`)           | The prefix of the objects that should be removed (Optional). If no prefix is provided, then all objects within the specified bucket will be removed, unless an explicit list of objects is provided in the Objects List field.
@@ -365,11 +372,11 @@ Name       | Description
 Lists partially uploaded objects in a bucket.
 
 ### Parameters ###
-Name       | Parameter<br>(`passed in as`)     | Description
-:--------- | :----------------------------- | :----------
-![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName`)  | Name of the bucket.
-![prefix]**Prefix** | `prefix`<br>(`msg.prefix`)          | Prefix of the object names that are partially uploaded. (optional).
-![recursive]**Recursive** | recursive (`msg.recursive`) | `true` indicates recursive style listing and `false` indicates directory style listing delimited by '/'. (optional, default `false`).
+Name                      | Parameter<br>(`passed in as`)      | Description
+:------------------------ | :--------------------------------- | :----------
+![bucket]**Bucket**       | `bucketName`<br>(`msg.bucketName`) | Name of the bucket.
+![prefix]**Prefix**       | `prefix`<br>(`msg.prefix`)         | Prefix of the object names that are partially uploaded. (optional).
+![recursive]**Recursive** | recursive (`msg.recursive`)        | `true` indicates recursive style listing and `false` indicates directory style listing delimited by '/'. (optional, default `false`).
 
 ### Node Outputs ###
 Name       | Description
@@ -391,12 +398,12 @@ expiration time in seconds after which the URL is no longer valid.
 The default value is 7 days.
 
 ### Parameters ###
-Name           | Parameter<br>(`passed in as`)      | Description
-:------------- | :------------------------------ | :----------
-![bucket]**Bucket**     | `bucketName`<br>(`msg.bucketName`)   | Name of the bucket.
-![file]**Object**     | `objectName`<br>(`msg.objectName`)   | Name of the object.
-![expiry]**Expiry**     | `expiry`<br>(`msg.expiry`)           | Expiry time in seconds. Default value is 7 days. (optional)
-![params]**Params**     | `reqParams`<br>(`msg.reqParams`)     | Request parameters. (optional)
+Name                      | Parameter<br>(`passed in as`)        | Description
+:------------------------ | :----------------------------------- | :----------
+![bucket]**Bucket**       | `bucketName`<br>(`msg.bucketName`)   | Name of the bucket.
+![file]**Object**         | `objectName`<br>(`msg.objectName`)   | Name of the object.
+![expiry]**Expiry**       | `expiry`<br>(`msg.expiry`)           | Expiry time in seconds. Default value is 7 days. (optional)
+![params]**Params**       | `reqParams`<br>(`msg.reqParams`)     | Request parameters. (optional)
 ![calendar]**Issue Date** | `requestDate`<br>(`msg.requestDate`) | A date object, the url will be issued at. Default value is now. (optional)
 
 ### Node Outputs ###
@@ -413,13 +420,13 @@ Browsers/Mobile clients may point to this URL to directly download objects even 
 
 
 ### Parameters ###
-Name             | Parameter<br>(`passed in as`)     | Description
-:--------------- | :----------------------------- | :----------
-![bucket]**Bucket**       | `bucketName`<br>(`msg.bucketName`   | Name of the bucket.
-![file]**Object**       | `objectName`<br>(`msg.objectName`   | Name of the object.
-![expiry]**Expiry**       | `expiry`<br>(`msg.expiry`           | Expiry time in seconds. Default value is 7 days. (optional)
-![headers]**Headers**      | `respHeaders`<br>(`msg.respHeaders` | Response headers to override (optional)
-![calendar]**Issue Date** | `requestDate`<br>(`msg.requestDate` | A date object, the url will be issued at. Default value is now. (optional)
+Name                      | Parameter<br>(`passed in as`)        | Description
+:------------------------ | :----------------------------------- | :----------
+![bucket]**Bucket**       | `bucketName`<br>(`msg.bucketName`)   | Name of the bucket.
+![file]**Object**         | `objectName`<br>(`msg.objectName`)   | Name of the object.
+![expiry]**Expiry**       | `expiry`<br>(`msg.expiry`)           | Expiry time in seconds. Default value is 7 days. (optional)
+![headers]**Headers**     | `respHeaders`<br>(`msg.respHeaders`) | Response headers to override (optional)
+![calendar]**Issue Date** | `requestDate`<br>(`msg.requestDate`) | A date object, the url will be issued at. Default value is now. (optional)
 
 ### Node Outputs ###
 Name       | Description
@@ -436,11 +443,11 @@ can have an associated expiration time in seconds after which the
 URL is no longer valid. The default value is 7 days.
 
 ### Parameters ###
-Name       | Parameter<br>(`passed in as`)   | Description
-:--------- | :--------------------------- | :----------
-![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName` | Name of the bucket.
-![file]**Object** | `objectName`<br>(`msg.objectName` | Name of the object.
-![expiry]**Expiry** | `expiry`<br>(`msg.expiry`         | Expiry time in seconds. Default value is 7 days. (optional)
+Name                | Parameter<br>(`passed in as`)      | Description
+:------------------ | :--------------------------------- | :----------
+![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName`) | Name of the bucket.
+![file]**Object**   | `objectName`<br>(`msg.objectName`) | Name of the object.
+![expiry]**Expiry** | `expiry`<br>(`msg.expiry`)         | Expiry time in seconds. Default value is 7 days. (optional)
 
 ### Node Outputs ###
 Name       | Description
@@ -483,10 +490,10 @@ The bucket **_Operation_** can be passed in to the node by setting the appropria
 Creates a new bucket.
 
 ### Parameters ###
-Name       | Parameter<br>(`passed in as`)   | Description
-:--------- | :--------------------------- | :----------
-![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName` | Name of the bucket to be created.
-![region]**Region** | `region`<br>(`msg.region`         | Region where the bucket is to be created. (optional)
+Name                | Parameter<br>(`passed in as`)      | Description
+:------------------ | :--------------------------------- | :----------
+![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName`) | Name of the bucket to be created.
+![region]**Region** | `region`<br>(`msg.region`)         | Region where the bucket is to be created. (optional)
 
 ### Node Outputs ###
 Name       | Description
@@ -511,7 +518,7 @@ Checks if a bucket exists.
 ### Parameters ###
 Name       | Parameter<br>(`passed in as`)   | Description
 :--------- | :--------------------------- | :----------
-![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName` | Name of the bucket to be checked.
+![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName`) | Name of the bucket to be checked.
 
 ### Node Outputs ###
 Name       | Description
@@ -526,7 +533,7 @@ Removes a bucket.
 ### Parameters ###
 Name       | Parameter<br>(`passed in as`)   | Description
 :--------- | :--------------------------- | :----------
-![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName` | Name of the bucket to be removed.
+![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName`) | Name of the bucket to be removed.
 
 ### Node Outputs ###
 Name       | Description
@@ -551,7 +558,7 @@ as well.
 ### Parameters ###
 Name       | Parameter<br>(`passed in as`)   | Description
 :--------- | :--------------------------- | :----------
-![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName` | Name of the bucket.
+![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName`) | Name of the bucket.
 
 ### Node Outputs ###
 Name       | Description
@@ -567,8 +574,8 @@ Set the bucket policy on the specified bucket. [bucketPolicy](https://docs.aws.a
 ### Parameters ###
 Name       | Parameter<br>(`passed in as`)       | Description
 :--------- | :------------------------------- | :----------
-![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName`     | Name of the bucket.
-![policy]**Policy** | `bucketPolicy`<br>(`msg.bucketPolicy` | Bucket policy.
+![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName`)     | Name of the bucket.
+![policy]**Policy** | `bucketPolicy`<br>(`msg.bucketPolicy`) | Bucket policy.
 
 ### Node Outputs ###
 Name       | Description
