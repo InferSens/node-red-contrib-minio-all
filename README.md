@@ -37,7 +37,7 @@ Creates a new bucket.
 ### Parameters ###
 Name       | Parameter (`passed in as`)      | Description
 :--------- | :------------------------------ | :----------
-**Bucket** | `bucketName` (`msg.bucketName`) | Name of the bucket to be created
+![database] **Bucket** | `bucketName` (`msg.bucketName`) | Name of the bucket to be created
 **Region** | `region` (`msg.region`)         | Region where the bucket is to be created. (optional)
 
 ### Node Outputs ###
@@ -577,3 +577,5 @@ Name       | Description
 **Error**  | Any errors received in response to the request will be passed to the node's 'Error' output.
 ___
 Copyright © 2020 Colin Payne
+
+[database]: <img src="https://github.com/encharm/Font-Awesome-SVG-PNG/blob/master/black/svg/database.svg" width="32">
