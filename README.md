@@ -8,16 +8,16 @@ This set of nodes (and associated support information) is a work in progress.
 
 ## MinIO Operations ##
 
-Bucket | File Object | Object | Presigned | Bucket Notification | Bucket Policy
------- | ----------- | ------ | --------- | ------------------- | -------------
-[makeBucket](#1.-makebucket) | [fGetObject](#1.-fgetobject) | [getObject](#1.-getobject) | [presignedUrl](#1.-presignedurl) | [getBucketNotification](#1.-getbucketnotification) | [getBucketPolicy](#1.-getbucketpolicy)
-[listBuckets](#2.-listbuckets) | [fPutObject](#2.-fputobject) | [getPartialObject](#2.-getpartialobject) | [presignedGetObject](#2.-presignedgetobject) | [setBucketNotification](#2.-setbucketnotification) | [setBucketPolicy](#2.-setbucketpolicy)
-[bucketExists](#3.-bucketexists) |   | [putObject](#3.-putobject) | [presignedPutObject](#3.-presignedputobject) | [removeAllBucketNotification](#3.-removeallbucketnotification) |  
-[removeBucket](#4.-removebucket) |   | [copyObject](#4.-copyobject) | [presignedPostPolicy](#4.-presignedpostpolicy) | [listenBucketNotification](#4.-listenbucketnotification) |  
-[listObjects](#5.-listobjects) |   | [statObject](#5.-statobject) |   |   |  
-[listObjectsV2](#6.-listobjectsv2) |   | [removeObject](#6.-removeobject) |   |   |  
-[listObjectsV2WithMetadata](#7.-listobjectsv2withmetadata) |   | [removeObjects](#7.-removeobjects) |   |   |  
-[listIncompleteUploads](#8.-listincompleteuploads) |   | [removeIncompleteUpload](#8.-removeincompleteupload) |   |   |  
+[Bucket](#-bucket-operations) | [File Object](#-file-object-operations) | [Object](#-object-operations) | [Presigned](#-presigned-operations) | [Bucket Notification](#-bucket-notification-operations) | [Bucket Policy](#-bucket-policy-operations)
+----------------------------- | --------------------------------------- | ----------------------------- | ----------------------------------- | ------------------- | -------------
+[makeBucket](#1-makebucket) | [fGetObject](#1-fgetobject) | [getObject](#1-getobject) | [presignedUrl](#1-presignedurl) | [getBucketNotification](#1-getbucketnotification) | [getBucketPolicy](#1-getbucketpolicy)
+[listBuckets](#2-listbuckets) | [fPutObject](#2-fputobject) | [getPartialObject](#2-getpartialobject) | [presignedGetObject](#2-presignedgetobject) | [setBucketNotification](#2-setbucketnotification) | [setBucketPolicy](#2-setbucketpolicy)
+[bucketExists](#3-bucketexists) |   | [putObject](#3-putobject) | [presignedPutObject](#3-presignedputobject) | [removeAllBucketNotification](#3-removeallbucketnotification) |  
+[removeBucket](#4-removebucket) |   | [copyObject](#4-copyobject) | [presignedPostPolicy](#4-presignedpostpolicy) | [listenBucketNotification](#4-listenbucketnotification) |  
+[listObjects](#5-listobjects) |   | [statObject](#5-statobject) |   |   |  
+[listObjectsV2](#6-listobjectsv2) |   | [removeObject](#6-removeobject) |   |   |  
+[listObjectsV2WithMetadata](#7-listobjectsv2withmetadata) |   | [removeObjects](#7-removeobjects) |   |   |  
+[listIncompleteUploads](#8-listincompleteuploads) |   | [removeIncompleteUpload](#8-removeincompleteupload) |   |   |  
 
 
 ### Passing in parameters ###
