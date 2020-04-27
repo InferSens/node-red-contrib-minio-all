@@ -8,7 +8,7 @@ This set of nodes (and associated support information) is a work in progress.
 
 ## MinIO Operations ##
 
-[Bucket](#-bucket-operations) | [File Object](#-file-object-operations) | [Object](#-object-operations) | [Presigned](#-presigned-operations) | [Bucket Notification](#-bucket-notification-operations) | [Bucket Policy](#-bucket-policy-operations)
+[Bucket](#bucket-operations) | [File Object](#file-object-operations) | [Object](#object-operations) | [Presigned](#presigned-operations) | [Bucket Notification](#bucket-notification-operations) | [Bucket Policy](#bucket-policy-operations)
 ----------------------------- | --------------------------------------- | ----------------------------- | ----------------------------------- | ------------------- | -------------
 [makeBucket](#1-makebucket) | [fGetObject](#1-fgetobject) | [getObject](#1-getobject) | [presignedUrl](#1-presignedurl) | [getBucketNotification](#1-getbucketnotification) | [getBucketPolicy](#1-getbucketpolicy)
 [listBuckets](#2-listbuckets) | [fPutObject](#2-fputobject) | [getPartialObject](#2-getpartialobject) | [presignedGetObject](#2-presignedgetobject) | [setBucketNotification](#2-setbucketnotification) | [setBucketPolicy](#2-setbucketpolicy)
