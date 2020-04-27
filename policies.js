@@ -51,11 +51,14 @@ module.exports = function(RED) {
                 
                 // ====  GET BUCKET POLICY  ===================================================
                 case "getBucketPolicy":
+                    helpers.statusUpdate(node, "blue", "dot", 'Fetching Bucket Policy...');
                     minioClient.getBucketPolicy(opParams.bucketName, function(err, policy) {
                         if (err) {
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             node.output = { 'getBucketPolicy': false };
                             node.error = err;
                         } else {
+                            helpers.statusUpdate(node, "green", "dot", 'Returned Bucket Policy', 5000);
                             node.output = {
                                 'getBucketPolicy': true,
                                 'policy': policy
@@ -68,11 +71,14 @@ module.exports = function(RED) {
 
                 // ====  SET BUCKET POLICY  ===========================================
                 case "setBucketPolicy":
-                   minioClient.setBucketPolicy(opParams.bucketName, JSON.stringify(opParams.bucketPolicy), function(err) {
+                    helpers.statusUpdate(node, "blue", "dot", 'Setting Bucket Policy...');
+                    minioClient.setBucketPolicy(opParams.bucketName, JSON.stringify(opParams.bucketPolicy), function(err) {
                         if (err) {
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             node.output = { 'setBucketPolicy': false };
                             node.error = err;
                         } else {
+                            helpers.statusUpdate(node, "green", "dot", 'Set Bucket Policy', 5000);
                             node.output = { 'setBucketPolicy': true };
                             node.error = null;
                         }

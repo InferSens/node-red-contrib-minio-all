@@ -60,11 +60,14 @@ module.exports = function(RED) {
                 
                 // ====  GET BUCKET NOTIFICATION  ===================================================
                 case "getBucketNotification":
+                    helpers.statusUpdate(node, "blue", "dot", 'Checking Bucket Notification Config...');
                     minioClient.getBucketNotification(opParams.bucketName, function(err, bucketNotificationConfig) {
                         if (err) {
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             node.output = { 'getBucketNotification': false };
                             node.error = err;
                         } else {
+                            helpers.statusUpdate(node, "green", "dot", 'Returned Bucket Notification Config', 5000);
                             node.output = {
                                 'getBucketNotification': true,
                                 'config': bucketNotificationConfig

@@ -67,8 +67,8 @@
         let elementArray = [];
 
         let elementIds = [
-            [ 1,   "policies_bucketName" ],
-            [ 2,   "policies_bucketPolicy" ]
+            [ 1, "policies_bucketName" ],
+            [ 2, "policies_bucketPolicy" ]
         ]
 
         for (elementId of elementIds) {
@@ -130,7 +130,11 @@
     <h2>1. <i>getBucketPolicy</i></h2>
     
     <h3>Description</h3>
-    <p>Creates a new bucket.</p>
+    <p>
+        Get the bucket policy associated with the specified bucket. If <code>objectPrefix</code>
+        is not empty, the bucket policy will be filtered based on object permissions
+        as well.
+    </p>
     
     <h3>Parameters</h3>
     
@@ -138,17 +142,14 @@
         <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
 
         <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Name of the bucket to be created.</td></tr>
-
-        <tr><td valign="top"><i class="fa fa-globe">&#x202F;</i></td><td valign="top"><b>Region</b></td><td><b><code>region</code></b> ( <code>msg.region</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Region where the bucket is to be created. (optional)</td></tr>
+        <tr><td> </td><td colspan=2>Name of the bucket.</td></tr>
 
     </table>
     
     <h3>Node Outputs</h3>
     <table>
         <tr>
-            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the bucket was created, e.g. <code>{"makeBucket":true}</code></td>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the bucket policy exists, and if it does, the details of the policy, e.g. <code>{"getBucketPolicy":true, "policy":{...} }</code></td>
         </tr>
         <tr>
             <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will be passed to the node's 'Error' output.</td>
@@ -161,7 +162,7 @@
     <h2>2. <i>setBucketPolicy</i></h2>
     
     <h3>Description</h3>
-    <p>Checks if a bucket exists.</p>
+    <p>Set the bucket policy on the specified bucket. <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html">bucketPolicy</a> is detailed here.</p>
     
     <h3>Parameters</h3>
     
@@ -169,14 +170,17 @@
         <tr><th colspan=2 style="text-align:left">Name</th><th  style="text-align:left">Parameter</th></tr>
 
         <tr><td valign="top"><i class="fa fa-database">&#x202F;</i></td><td valign="top"><b>Bucket</b></td><td><b><code>bucketName</code></b> ( <code>msg.bucketName</code> )</td></tr>
-        <tr><td> </td><td colspan=2>Name of the bucket to be checked.</td></tr>
-
+        <tr><td> </td><td colspan=2>Name of the bucket.</td></tr>
+    
+        <tr><td valign="top"><i class="fa fa-book">&#x202F;</i></td><td valign="top"><b>Policy</b></td><td><b><code>bucketPolicy</code></b> ( <code>msg.bucketPolicy</code> )</td></tr>
+        <tr><td> </td><td colspan=2>Bucket policy.</td></tr>
+    
     </table>
     
     <h3>Node Outputs</h3>
     <table>
         <tr>
-            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the bucket exists, e.g. <code>{"bucketExists":true}</code></td>
+            <td valign="top"><B>Output</B></td><td valign="top">The node will output confirmation, in the form of a JS object, as to whether or not the bucket policy has been set, e.g. <code>{"setBucketPolicy":true}</code></td>
         </tr>
         <tr>
             <td valign="top"><B>Error</B></td><td valign="top">Any errors received in response to the request will be passed to the node's 'Error' output.</td>
