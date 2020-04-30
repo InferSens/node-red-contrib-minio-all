@@ -76,7 +76,6 @@ module.exports = function(RED) {
             opParams.reqParams   = (msg.reqParams)   ? msg.reqParams     : opParams.reqParams;
             opParams.respHeaders = (msg.respHeaders) ? msg.respHeaders   : opParams.respHeaders;
             opParams.requestDate = (msg.requestDate) ? msg.requestDate   : opParams.requestDate;
-            // opParams.policy      = (msg.policy)      ? msg.policy        : opParams.policy;
             // ...and for Presigned POST Policy Operations:
             if (msg.policy) { // If msg.policy has any values provided in the incoming message, then use them.
                 opParams.policy.setBucket                      = (msg.policy.setBucket)                  ? msg.policy.setBucket                  : opParams.policy.setBucket;

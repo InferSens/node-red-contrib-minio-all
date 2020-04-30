@@ -27,7 +27,14 @@
             notifications_notificationconfig: {value:""},
             notifications_prefix: {value:""},
             notifications_suffix: {value:""},
-            notifications_events: {value:""}
+            notifications_events: {value:""},
+            notifications_events_object_created_put: {value:true},
+            notifications_events_object_created_post: {value:true},
+            notifications_events_object_created_copy: {value:true},
+            notifications_events_object_created_complete_multipart_upload: {value:true},
+            notifications_events_object_removed_delete: {value:true},
+            notifications_events_object_accessed_get: {value:true},
+            notifications_events_object_accessed_head: {value:true}
        },
         inputs:1,
         outputs:2,
@@ -136,9 +143,88 @@
         <label for="node-input-notifications_suffix"><i class="fa fa-step-forward"></i> Suffix</label>
         <input type="text" id="node-input-notifications_suffix" placeholder="Suffix">
     </div>
-    <div class="form-row" id="notifications_events" style="display: none">
-        <label for="node-input-notifications_events"><i class="fa fa-exclamation-circle"></i> Events</label>
-        <input type="text" id="node-input-notifications_events" placeholder="Events">
+    <div id="notifications_events" style="display: none">
+        <div class="form-row" id="notifications_events_heading">
+            <b>Supported Event Types:</b>
+        </div>
+
+        <div id="notifications_events_object_created_put" style="display: flex; justify-content: flex-start; align-items: center; flex-wrap: nowrap">
+            <div style="width: 118px; height: 30px; align-items: center; text-align: right">
+                <label for="node-input-notifications_events_object_created_put"></label>
+                <input type="checkbox" id="node-input-notifications_events_object_created_put">
+            </div>
+            <div style="width: 10px; height: 30px"> </div>
+            <div style="height: 30px; align-content: flex-end; line-height: 36px">
+                s3:ObjectCreated:Put
+            </div>
+        </div>
+
+        <div id="notifications_events_object_created_post" style="display: flex; justify-content: flex-start; align-items: center; flex-wrap: nowrap">
+            <div style="width: 118px; height: 30px; align-items: center; text-align: right">
+                <label for="node-input-notifications_events_object_created_post"></label>
+                <input type="checkbox" id="node-input-notifications_events_object_created_post">
+            </div>
+            <div style="width: 10px; height: 30px"> </div>
+            <div style="height: 30px; align-content: flex-end; line-height: 36px">
+                s3:ObjectCreated:Post
+            </div>
+        </div>
+
+        <div id="notifications_events_object_created_copy" style="display: flex; justify-content: flex-start; align-items: center; flex-wrap: nowrap">
+            <div style="width: 118px; height: 30px; align-items: center; text-align: right">
+                <label for="node-input-notifications_events_object_created_copy"></label>
+                <input type="checkbox" id="node-input-notifications_events_object_created_copy">
+            </div>
+            <div style="width: 10px; height: 30px"> </div>
+            <div style="height: 30px; align-content: flex-end; line-height: 36px">
+                s3:ObjectCreated:Copy
+            </div>
+        </div>
+
+        <div id="notifications_events_object_created_complete_multipart_upload" style="display: flex; justify-content: flex-start; align-items: center; flex-wrap: nowrap">
+            <div style="width: 118px; height: 30px; align-items: center; text-align: right">
+                <label for="node-input-notifications_events_object_created_complete_multipart_upload"></label>
+                <input type="checkbox" id="node-input-notifications_events_object_created_complete_multipart_upload">
+            </div>
+            <div style="width: 10px; height: 30px"> </div>
+            <div style="height: 30px; align-content: flex-end; line-height: 36px">
+                s3:ObjectCreated:CompleteMultipartUpload
+            </div>
+        </div>
+
+        <div id="notifications_events_object_removed_delete" style="display: flex; justify-content: flex-start; align-items: center; flex-wrap: nowrap">
+            <div style="width: 118px; height: 30px; align-items: center; text-align: right">
+                <label for="node-input-notifications_events_object_removed_delete"></label>
+                <input type="checkbox" id="node-input-notifications_events_object_removed_delete">
+            </div>
+            <div style="width: 10px; height: 30px"> </div>
+            <div style="height: 30px; align-content: flex-end; line-height: 36px">
+                s3:ObjectRemoved:Delete
+            </div>
+        </div>
+
+        <div id="notifications_events_object_accessed_get" style="display: flex; justify-content: flex-start; align-items: center; flex-wrap: nowrap">
+            <div style="width: 118px; height: 30px; align-items: center; text-align: right">
+                <label for="node-input-notifications_events_object_accessed_get"></label>
+                <input type="checkbox" id="node-input-notifications_events_object_accessed_get">
+            </div>
+            <div style="width: 10px; height: 30px"> </div>
+            <div style="height: 30px; align-content: flex-end; line-height: 36px">
+                s3:ObjectAccessed:Get
+            </div>
+        </div>
+       
+        <div id="notifications_events_object_accessed_head" style="display: flex; justify-content: flex-start; align-items: center; flex-wrap: nowrap">
+            <div style="width: 118px; height: 30px; align-items: center; text-align: right">
+                <label for="node-input-notifications_events_object_accessed_head"></label>
+                <input type="checkbox" id="node-input-notifications_events_object_accessed_head">
+            </div>
+            <div style="width: 10px; height: 30px"> </div>
+            <div style="height: 30px; align-content: flex-end; line-height: 36px">
+                s3:ObjectAccessed:Head
+            </div>
+        </div>
+
     </div>
 </script>
 
