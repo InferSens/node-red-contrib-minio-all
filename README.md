@@ -8,6 +8,11 @@ This set of nodes (and associated support information) is a work in progress.
 
 The Bucket Notification Operation `setBucketNotification` is being worked on, and is not currently functioning correctly.
 
+<hr>
+
+**2020/05/06 - Version: 0.0.5**
+• `getPartialObject` now working as expected, and README updated accordingly.
+
 **2020/04/29 - Version: 0.0.4**
 • `listenBucketNotification` now extended to include defined [Supported Event Types](https://docs.min.io/docs/minio-bucket-notification-guide.html).
 
