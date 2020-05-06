@@ -108,21 +108,32 @@ module.exports = function(RED) {
 
                 // ====  GET PARTIAL OBJECT  ===========================================
                 case "getPartialObject":
-                    // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
                     var size = 0
-                    minioClient.getPartialObject(opParams.bucketName, opParams.objectName, opParams.offset, opParams.length, function(err, dataStream) {
+                    minioClient.getPartialObject(opParams.bucketName, opParams.objectName, parseInt(opParams.offset), parseInt(opParams.length), function(err, dataStream) {
+                        helpers.statusUpdate(node, "blue", "dot", 'Attempting getPartialObject...', 5000);
                         if (err) {
                             helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
-                            return console.log(err)
+                            node.error  = err;
+                            node.output = { 'getPartialObject': false };
                         }
+                        var receivedChunk;
                         dataStream.on('data', function(chunk) {
-                            size += chunk.length
+                            helpers.statusUpdate(node, "blue", "dot", 'Receiving data...', 5000);
+                            size += chunk.length;
+                            receivedChunk = chunk;
                         })
                         dataStream.on('end', function() {
-                            console.log('End. Total size = ' + size)
+                            helpers.statusUpdate(node, "green", "dot", 'Object Chunk Received', 5000);
+                            node.error  = null;
+                            node.output = { 
+                                'getPartialObject': true,
+                                'chunk': receivedChunk
+                            };
                         })
                         dataStream.on('error', function(err) {
-                            console.log(err)
+                            helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
+                            node.error  = err;
+                            node.output = { 'getPartialObject': false };
                         })
                     })
                     break;
@@ -132,11 +143,11 @@ module.exports = function(RED) {
                     minioClient.putObject(opParams.bucketName, opParams.objectName, opParams.stream, function(err, etag) {
                         if (err) {
                             helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
-                            node.error = err;
-                            node.output  = { 'putObject': false };
+                            node.error  = err;
+                            node.output = { 'putObject': false };
                         } else {
-                            node.error = null;
-                            node.output  = {
+                            node.error  = null;
+                            node.output = {
                                 'putObject': true,
                                 'etag': etag
                             };
@@ -182,6 +193,7 @@ module.exports = function(RED) {
                             node.error = err;
                             node.output  = { 'copyObject': false };
                         } else {
+                            helpers.statusUpdate(node, "green", "dot", 'Object Copied', 5000);
                             node.error = null;
                             node.output  = {
                                 'copyObject': true,

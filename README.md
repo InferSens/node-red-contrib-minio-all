@@ -257,14 +257,14 @@ Downloads the specified range bytes of an object as a stream.
 Name       | Parameter<br>(`passed in as`)    | Description
 :--------- | :---------------------------- | :----------
 ![bucket]**Bucket** | `bucketName`<br>(`msg.bucketName`) | Name of the bucket.
-![file]**Object** | `objectName`<br>(`msg.objectName`) | Name of the object.
+![file]**Object** | `objectName`<br>(`msg.objectName`)   | Name of the object.
 ![offset]**Offset** | `offset`<br>(`msg.offset`)         | Offset of the object from where the stream will start.
 ![length]**Length** | `length`<br>(`msg.length`)         | Length of the object that will be read in the stream (optional, if not specified we read the rest of the file from the offset).
 
 ### Node Outputs ###
 Name       | Description
 :--------- | :---------- 
-**Output** | TBC
+**Output** | The node will output a JS object, containing confirmation as to whether or not thepartial object (chunk) was successfully downloaded, and, if successful, a buffer array for the downloaded partial object stream, e.g. `{ "getPartialObject": true, "chunk": [...] }`
 **Error**  | Any errors received in response to the request will be passed to the node's 'Error' output.
 
 
