@@ -84,7 +84,6 @@ module.exports = function (RED) {
 
                 // ====  GET OBJECT  ===================================================
                 case "getObject":
-                    // LIFTED STRAIGHT FROM SPEC - TO BE COMPLETED:
                     var size = 0,
                         fileData = [];
 

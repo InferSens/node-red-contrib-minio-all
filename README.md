@@ -10,6 +10,9 @@ The Bucket Notification Operation `setBucketNotification` is being worked on, an
 
 <hr>
 
+**2021/01/29 - Version: 0.0.6**
+• `getObject` now working; edits by @macanfa - thank you!
+
 **2020/05/06 - Version: 0.0.5**
 • `getPartialObject` now working as expected, and README updated accordingly.
 
