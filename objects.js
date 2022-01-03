@@ -156,7 +156,7 @@ module.exports = function (RED) {
 
                     // ====  PUT OBJECT  ===================================================
                 case "putObject":
-                    minioClient.putObject(opParams.bucketName, opParams.objectName, opParams.stream, function (err, etag) {
+                    minioClient.putObject(opParams.bucketName, opParams.objectName, opParams.stream, opParams.size, opParams.metaData, function (err, etag) {
                         if (err) {
                             helpers.statusUpdate(node, "red", "dot", 'Error', 5000);
                             node.error = err;
