@@ -333,11 +333,8 @@ module.exports = function (RED) {
                 if (!node.output) {
                     timerId = setTimeout(check, 50);
                 } else {
-                    node.send([{
-                        'payload': node.output
-                    }, {
-                        'payload': node.error
-                    }]);
+                    const msgArray = helpers.buildOutMessage(msg, node.output, node.error);
+                    node.send(msgArray);
                 }
             }, 50);
 
