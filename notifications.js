@@ -217,7 +217,7 @@ module.exports = function(RED) {
             // Waits until response received from host before sending to node output(s)
             var timerId = setTimeout(function check() {
                 if (!node.output) { timerId = setTimeout(check, 50); } else {
-                    const msgArray = helpers.buildOutMessage(msg, node.output, node.error);
+                    const msgArray = helpers.buildOutMessage(RED, msg, node.output, node.error);
                     node.send(msgArray);
                 }
             }, 50);
