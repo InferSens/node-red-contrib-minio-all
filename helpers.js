@@ -14,6 +14,23 @@
  * limitations under the License.
  **/
 
+/**
+ * Take the input msg object, duplicate it, then set as payload the OK/Err responses 
+ * received from the Minio call and return an array of msg [ okMsg, errMsg ]
+ * @param {*} inputMessage the message in input to the node
+ * @param {*} okPayload payload for OK respose
+ * @param {*} errorPayload payload for Error response
+ * @returns an array [ okMsg, errMsg ] containing the input message enriched with the 
+ * result of the Minio call as payload
+ */
+exports.buildOutMessage = function(inputMessage, okPayload, errorPayload) {
+    inputMessage.payload = null; // Avoid cloning payload as it will be overwritten
+    let errMsg = RED.util.cloneMessage(inputMessage);
+    inputMessage.payload = okPayload;
+    errMsg.payload = errorPayload;
+    return [ inputMessage , errMsg ];
+}
+
 // ====  FUNCTION TO SET AND OPTIONALLY CLEAR A NODE'S STATUS  =================
 // ----  Node Status Options:
 // ----  FILL - red, green, yellow, blue or grey
